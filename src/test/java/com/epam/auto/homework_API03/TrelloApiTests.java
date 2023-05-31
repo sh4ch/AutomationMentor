@@ -1,10 +1,11 @@
 package com.epam.auto.homework_API03;
 
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -12,36 +13,39 @@ import java.util.Map;
 
 public class TrelloApiTests {
 
-   private final static String URL = "https://api.trello.com/1/";
-   private final static String KEY = "123";
-   private final static String TOKEN = "123";
-
    private static Board board;
    private static Card card;
+   private final String BOARD_PATH = "boards";
+   private final String CARD_PATH = "cards";
+   private static Specifications specification;
 
-   @Test
-   public void createBoardTest() {
+   @BeforeClass
+   public static void setup() {
+      specification = new Specifications();
+      TrelloApiTests setupForTests = new TrelloApiTests();
+      setupForTests.createBoard();
+      setupForTests.createCard();
+   }
 
-      Response response = RestAssured.given()
-              .spec(Specifications.requestSpec(URL))
-              .when()
-              .post("boards?key=" + KEY + "&token=" + TOKEN + "&name=Test Board")
-              .then()
-              .statusCode(HttpStatus.SC_OK)
-              .body("name", Matchers.equalTo("Test Board"))
-              .extract()
-              .response();
+   public void createBoard() {
+      String boardName = "Test Board";
+      Map<String, String> parameters = new HashMap<>();
+      parameters.put("name", boardName);
 
-      String id = response.jsonPath().getString("id");
-      String name = response.jsonPath().getString("name");
-      board = new Board();
-      board.setBoardId(id);
-      board.setBoardName(name);
+      board = RestAssured.given().spec(specification.requestSpec()).queryParams(parameters).when().post(BOARD_PATH).then().extract().response().as(Board.class);
+   }
+
+   public void getBoardLists() {
+      Map<String, String> pathParameters = new HashMap<>();
+      pathParameters.put("boardPath", BOARD_PATH);
+      pathParameters.put("boardId", board.getBoardId());
+      pathParameters.put("listPath", "lists");
 
       String toDolist = RestAssured.given()
-              .spec(Specifications.requestSpec(URL))
+              .spec(specification.requestSpec())
+              .pathParams(pathParameters)
               .when()
-              .get("boards/" + board.getBoardId() + "/lists?key=" + KEY + "&token=" + TOKEN)
+              .get("{boardPath}/{boardId}/{listPath}")
               .then()
               .extract()
               .response()
@@ -49,83 +53,148 @@ public class TrelloApiTests {
       board.setToDoListId(toDolist);
    }
 
-   @Test(dependsOnMethods = "createBoardTest")
-   public void updateBoardTest() {
+   public void createCard() {
+      getBoardLists();
+      String cardName = "First card";
+      Map<String, String> parameters = new HashMap<>();
+      parameters.put("name", cardName);
+      parameters.put("idList", board.getToDoListId());
 
-      Response response = RestAssured.given()
-              .spec(Specifications.requestSpec(URL))
+      card = RestAssured.given()
+              .spec(specification.requestSpec())
+              .queryParams(parameters)
+              .pathParam("cardPath", CARD_PATH)
               .when()
-              .put("boards/" + board.getBoardId() + "?key=" + KEY + "&token=" + TOKEN + "&prefs/background=pink")
+              .post("{cardPath}")
               .then()
               .statusCode(HttpStatus.SC_OK)
-              .body("prefs.background", Matchers.equalTo("pink"))
+              .body("name", Matchers.equalTo(cardName))
               .extract()
-              .response();
-
-      String color = response.jsonPath().getString("prefs.background");
-      board.setBackground(color);
+              .response()
+              .as(Card.class);
    }
 
-   @Test(dependsOnMethods = "updateBoardTest")
-   public void createCardTest() {
+   @Test(description = "Change board's background color")
+   public void updateBoardColorTest() {
+      String boardBackground = "pink";
+      Map<String, String> parameters = new HashMap<>();
+      parameters.put("prefs/background", boardBackground);
 
-      Response response = RestAssured.given()
-              .spec(Specifications.requestSpec(URL))
+      Map<String, String> pathParameters = new HashMap<>();
+      pathParameters.put("boardPath", BOARD_PATH);
+      pathParameters.put("boardId", board.getBoardId());
+
+      board = RestAssured.given()
+              .spec(specification.requestSpec())
+              .queryParams(parameters)
+              .pathParams(pathParameters)
+              .pathParam("boardId", board.getBoardId())
               .when()
-              .post("cards?key=" + KEY + "&token=" + TOKEN + "&name=First card&idList=" + board.getToDoListId())
+              .put("{boardPath}/{boardId}")
               .then()
               .statusCode(HttpStatus.SC_OK)
-              .body("name", Matchers.equalTo("First card"))
+              .body("prefs.background", Matchers.equalTo(boardBackground))
               .extract()
-              .response();
-
-      String cardId = response.jsonPath().getString("id");
-      String cardName = response.jsonPath().getString("name");
-      card = new Card();
-      card.setCardId(cardId);
-      card.setCardName(cardName);
+              .response()
+              .as(Board.class);
    }
 
-   @Test(dependsOnMethods = "createCardTest")
-   public void updateCardTest() {
+   @Test(description = "Get a card by Id")
+   public void getCardById() {
+      Map<String, String> pathParameters = new HashMap<>();
+      pathParameters.put("cardPath", CARD_PATH);
+      pathParameters.put("cardId", card.getCardId());
 
+      RestAssured.given()
+              .spec(specification.requestSpec())
+              .pathParams(pathParameters)
+              .when()
+              .get("{cardPath}/{cardId}")
+              .then()
+              .statusCode(HttpStatus.SC_OK)
+              .body("id", Matchers.equalTo(card.getCardId()))
+              .body("name", Matchers.equalTo(card.getCardName()));
+   }
+
+   @Test(description = "Get all cards on a board")
+   public void getBoardCards() {
+      Map<String, String> pathParameters = new HashMap<>();
+      pathParameters.put("boardPath", BOARD_PATH);
+      pathParameters.put("boardId", board.getBoardId());
+      pathParameters.put("cardPath", CARD_PATH);
+
+      RestAssured.given()
+              .spec(specification.requestSpec())
+              .pathParams(pathParameters)
+              .when()
+              .get("{boardPath}/{boardId}/{cardPath}")
+              .then()
+              .statusCode(HttpStatus.SC_OK)
+              .body("size()", Matchers.equalTo(1))
+              .body("[0].name", Matchers.equalTo(card.getCardName()));
+   }
+
+   @Test(description = "Change card's background color")
+   public void updateCardCoverColorTest() {
+      String cardCoverColor = "green";
       Map<String, Object> requestBody = new HashMap<>();
       Map<String, String> cover = new HashMap<>();
-      cover.put("color", "green");
+      cover.put("color", cardCoverColor);
       requestBody.put("cover", cover);
 
-      Response response = RestAssured.given()
-              .spec(Specifications.requestSpec(URL))
+      Map<String, String> pathParameters = new HashMap<>();
+      pathParameters.put("cardPath", CARD_PATH);
+      pathParameters.put("cardId", card.getCardId());
+
+      card = RestAssured.given()
+              .spec(specification.requestSpec())
               .body(requestBody)
+              .pathParams(pathParameters)
               .when()
-              .put("cards/" + card.getCardId() + "?key=" + KEY + "&token=" + TOKEN)
+              .put("{cardPath}/{cardId}")
               .then()
               .statusCode(HttpStatus.SC_OK)
-              .body("cover.color", Matchers.equalTo("green"))
+              .body("cover.color", Matchers.equalTo(cardCoverColor))
               .extract()
-              .response();
-
-      String cardColor = response.jsonPath().getString("cover.color");
-      card.setCoverColor(cardColor);
+              .response()
+              .as(Card.class);
    }
 
-   @Test(dependsOnMethods = "updateCardTest")
-   public void deleteBoardTest() {
+   @Test(description = "Change card's description")
+   public void updateCardDescriptionTest() {
+      String cardDescription = "My card description";
 
-      Response response = RestAssured.given()
-              .spec(Specifications.requestSpec(URL))
+      Map<String, String> pathParameters = new HashMap<>();
+      pathParameters.put("cardPath", CARD_PATH);
+      pathParameters.put("cardId", card.getCardId());
+
+      card = RestAssured.given()
+              .spec(specification.requestSpec())
+              .queryParam("desc", cardDescription)
+              .pathParams(pathParameters)
               .when()
-              .delete("boards/" + board.getBoardId() + "?key=" + KEY + "&token=" + TOKEN)
+              .put("{cardPath}/{cardId}")
+              .then()
+              .statusCode(HttpStatus.SC_OK)
+              .body("desc", Matchers.equalTo(cardDescription))
+              .extract()
+              .response()
+              .as(Card.class);
+   }
+
+   @AfterClass
+   public void deleteBoard() {
+      RestAssured.given()
+              .spec(specification.requestSpec())
+              .pathParam("boardId", board.getBoardId())
+              .when()
+              .delete(BOARD_PATH + "/{boardId}")
               .then()
               .statusCode(HttpStatus.SC_OK)
               .body("$", Matchers.hasKey("_value"))
-              .body("_value", Matchers.equalTo(null))
-              .extract()
-              .response();
-
-      board.setBackground(null);
-      board.setBoardName(null);
-      board.setBoardId(null);
+              .body("_value", Matchers.equalTo(null));
+      card = null;
+      board = null;
    }
 
 }

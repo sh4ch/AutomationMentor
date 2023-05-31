@@ -6,25 +6,30 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import lombok.SneakyThrows;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class Specifications {
 
-   public static RequestSpecification requestSpec(String url) {
+   @SneakyThrows
+   private Properties getProperties() {
+      Properties props = new Properties();
+      String propFileName = "test.properties";
+      props.load(getClass().getClassLoader().getResourceAsStream(propFileName));
+      return props;
+   }
+
+   public RequestSpecification requestSpec() {
+      Map<String, String> parameters = new HashMap<>();
+      parameters.put("key", getProperties().get("key").toString());
+      parameters.put("token", getProperties().get("token").toString());
       return new RequestSpecBuilder()
-              .setBaseUri(url)
+              .setBaseUri(getProperties().get("uri").toString())
               .setContentType(ContentType.JSON)
+              .addQueryParams(parameters)
               .build();
    }
-
-   public static ResponseSpecification responseSpecOK200() {
-      return new ResponseSpecBuilder()
-              .expectStatusCode(200)
-              .build();
-   }
-
-   public static void buildSpecifications(RequestSpecification request, ResponseSpecification response){
-      RestAssured.requestSpecification = request;
-      RestAssured.responseSpecification = response;
-   }
-
 }

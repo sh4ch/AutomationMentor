@@ -1,51 +1,30 @@
 package com.epam.auto.homework_API03;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
+
+@Data
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Board {
 
+   @JsonAlias("id")
    private String boardId;
+   @JsonAlias("name")
    private String boardName;
-   private String background = "blue";
+   private Prefs prefs;
    private String toDoListId;
+
+   @Data
+   @JsonIgnoreProperties(ignoreUnknown = true)
+   public static class Prefs {
+
+      private String background;
+   }
 
    public Board(String boardId, String boardName) {
       this.boardId = boardId;
       this.boardName = boardName;
-
-   }
-
-   public Board() {
-
-   }
-
-   public String getBoardId() {
-      return boardId;
-   }
-
-   public void setBoardId(String boardId) {
-      this.boardId = boardId;
-   }
-
-   public String getBoardName() {
-      return boardName;
-   }
-
-   public void setBoardName(String boardName) {
-      this.boardName = boardName;
-   }
-
-   public String getBackground() {
-      return background;
-   }
-
-   public void setBackground(String background) {
-      this.background = background;
-   }
-
-   public String getToDoListId() {
-      return toDoListId;
-   }
-
-   public void setToDoListId(String toDoListId) {
-      this.toDoListId = toDoListId;
    }
 }

@@ -1,41 +1,32 @@
 package com.epam.auto.homework_API03;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Card {
 
+   @JsonAlias("id")
    private String cardId;
+   @JsonAlias("name")
    private String cardName;
-   private String coverColor;
+   @JsonAlias("desc")
+   private String cardDescription;
+   private Cover cover;
 
-   public Card() {
+   @Data
+   @JsonIgnoreProperties(ignoreUnknown = true)
+   public static class Cover {
 
+      private String color;
    }
 
    public Card(String cardId, String cardName) {
       this.cardId = cardId;
       this.cardName = cardName;
-   }
-
-   public String getCardId() {
-      return cardId;
-   }
-
-   public void setCardId(String cardId) {
-      this.cardId = cardId;
-   }
-
-   public String getCardName() {
-      return cardName;
-   }
-
-   public void setCardName(String cardName) {
-      this.cardName = cardName;
-   }
-
-   public String getCoverColor() {
-      return coverColor;
-   }
-
-   public void setCoverColor(String coverColor) {
-      this.coverColor = coverColor;
    }
 }
