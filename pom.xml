@@ -19,22 +19,31 @@
 
     <profiles>
         <profile>
-            <id>lesson01-all-calculator-test-suite</id>
+            <id>all-calculator</id>
             <properties>
                 <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium01/AllCalculatorTestSuite.xml</suite.xml.name>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
         <profile>
-            <id>lesson01-mult-sum-calculator-test-suite</id>
+            <id>multsum-calculator</id>
             <properties>
                 <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium01/MultSumCalculatorTestSuite.xml</suite.xml.name>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
         <profile>
-            <id>lesson01-pow-calculator-test-suite</id>
+            <id>pow-calculator</id>
             <properties>
                 <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium01/PowCalculatorTestSuite.xml</suite.xml.name>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
     </profiles>
 

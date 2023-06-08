@@ -6,11 +6,10 @@ import org.testng.annotations.Test;
 
 public class CalculatorMultiplyTest extends CalculatorBaseTest {
 
-    @Test(dataProviderClass = CalculatorDataProvider.class, dataProvider = "Multiply Data")
-    public void multiplyTest(long a, long b, long expected) {
-        System.out.printf("multiply %d * %d data provider test\n", a, b);
-        long actual = calculator.mult(a, b);
-        assertThat(actual).isEqualTo(expected);
+    @Test(dataProviderClass = CalculatorDataProvider.class, dataProvider = "Calculator Data")
+    public void multiplyTest(long a, long b) {
+        assertThat(calculator.mult(a, b))
+                .as("Calculator multiplication: %d * %d is not equal to expected", a, b)
+                .isEqualTo(a * b);
     }
-
 }

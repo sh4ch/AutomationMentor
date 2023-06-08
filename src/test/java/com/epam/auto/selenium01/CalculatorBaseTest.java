@@ -21,12 +21,13 @@ public abstract class CalculatorBaseTest {
     @BeforeClass
     public void setUpClass() {
         System.out.println(this.getClass().getSimpleName() + " before class method\n");
-        this.calculator = new Calculator();
+
     }
 
     @BeforeMethod
     public void setUp() {
         System.out.println("before method\n");
+        this.calculator = new Calculator();
     }
 
     @AfterMethod

@@ -6,11 +6,10 @@ import org.testng.annotations.Test;
 
 public class CalculatorSumTest extends CalculatorBaseTest {
 
-    @Test(dataProviderClass = CalculatorDataProvider.class, dataProvider = "Sum Data")
-    public void sumTest(long a, long b, long expected) {
-        System.out.printf("sum %d + %d data provider test%n", a, b);
-        long actual = calculator.sum(a, b);
-        assertThat(actual).isEqualTo(expected);
+    @Test(dataProviderClass = CalculatorDataProvider.class, dataProvider = "Calculator Data")
+    public void sumTest(long a, long b) {
+        assertThat(calculator.sum(a, b))
+                .as("Calculator sum: %d + %d is not equal to expected", a, b)
+                .isEqualTo(a + b);
     }
-
 }

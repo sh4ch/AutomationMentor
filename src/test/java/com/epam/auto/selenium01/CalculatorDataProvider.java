@@ -3,43 +3,22 @@ package com.epam.auto.selenium01;
 import org.testng.annotations.DataProvider;
 
 public class CalculatorDataProvider extends CalculatorBaseTest {
-    @DataProvider(name = "Sum Data")
-    public Object[][] sumDataProvider() {
+    @DataProvider(name = "Calculator Data")
+    public static Object[][] testDataProvider() {
         return new Object[][]{
-                {3, 2, 5},
-                {5, 5, 10},
-                {120, 300, 420},
-                {-6, -4, -10}
+                {3, 2},
+                {5, 5},
+                {45, 0},
+                {1, -1}
         };
     }
 
-    @DataProvider(name = "Subtract Data")
-    public Object[][] subtractDataProvider() {
+    @DataProvider(name = "Zero Division Data")
+    public static Object[][] divisionByZeroDataProvider() {
         return new Object[][]{
-                {3, 2, 1},
-                {5, 5, 0},
-                {120, 300, -180},
-                {0, -3, 3}
-        };
-    }
-
-    @DataProvider(name = "Multiply Data")
-    public Object[][] multiplyDataProvider() {
-        return new Object[][]{
-                {3, 2, 6},
-                {5, 5, 25},
-                {0, 35, 0},
-                {-3, 1, -3}
-        };
-    }
-
-    @DataProvider(name = "Pow Data")
-    public Object[][] powDataProvider() {
-        return new Object[][]{
-                {3, 2, 9.0},
-                {5, 5, 3125.0},
-                {45, 0, 1},
-                {1, -1, 1.0}
+                {3, 0, new NumberFormatException("Attempt to divide by zero")},
+                {3450L, 0, new NumberFormatException("Attempt to divide by zero")},
+                {-3, 0, new NumberFormatException("Attempt to divide by zero")}
         };
     }
 
