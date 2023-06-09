@@ -21,12 +21,6 @@ public class Card {
    @Data
    @JsonIgnoreProperties(ignoreUnknown = true)
    public static class Cover {
-
       private String color;
-   }
-
-   public Card(String cardId, String cardName) {
-      this.cardId = cardId;
-      this.cardName = cardName;
    }
 }

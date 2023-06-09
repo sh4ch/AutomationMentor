@@ -1,8 +1,9 @@
 package com.epam.auto.homework_API03;
 
 import io.restassured.RestAssured;
-
+import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.hamcrest.Matchers;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -10,58 +11,73 @@ import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class TrelloApiTests {
-
-   private static Board board;
-   private static Card card;
+   private RequestSpecification reqSpecification;
+   private Board board;
+   private Card card;
    private final String BOARD_PATH = "boards";
    private final String CARD_PATH = "cards";
-   private static Specifications specification;
+   private final String LIST_PATH = "lists";
+   String boardName = "Test Board";
+   String cardName = "First card";
+   String boardBackground = "pink";
+   String cardCoverColor = "green";
+   String cardDescription = "My card description";
+   String toDoListName = "To Do";
 
    @BeforeClass
-   public static void setup() {
-      specification = new Specifications();
-      TrelloApiTests setupForTests = new TrelloApiTests();
-      setupForTests.createBoard();
-      setupForTests.createCard();
+   public void setup() {
+      PropertiesService propertiesService = new PropertiesService();
+      Properties properties = propertiesService.getProperties();
+      SpecificationsService specification = new SpecificationsService(properties);
+      reqSpecification = specification.requestSpec();
+      createBoard();
+      createCard();
    }
 
    public void createBoard() {
-      String boardName = "Test Board";
       Map<String, String> parameters = new HashMap<>();
       parameters.put("name", boardName);
 
-      board = RestAssured.given().spec(specification.requestSpec()).queryParams(parameters).when().post(BOARD_PATH).then().extract().response().as(Board.class);
+      board = RestAssured.given()
+              .spec(reqSpecification)
+              .queryParams(parameters)
+              .when()
+              .post(BOARD_PATH)
+              .then()
+              .extract()
+              .response()
+              .as(Board.class);
    }
 
    public void getBoardLists() {
       Map<String, String> pathParameters = new HashMap<>();
       pathParameters.put("boardPath", BOARD_PATH);
       pathParameters.put("boardId", board.getBoardId());
-      pathParameters.put("listPath", "lists");
+      pathParameters.put("listPath", LIST_PATH);
 
       String toDolist = RestAssured.given()
-              .spec(specification.requestSpec())
+              .spec(reqSpecification)
               .pathParams(pathParameters)
               .when()
               .get("{boardPath}/{boardId}/{listPath}")
               .then()
               .extract()
               .response()
-              .path("find { it.name == 'To Do' }.id");
+              .path("find { it.name == '" + toDoListName + "' }.id");
       board.setToDoListId(toDolist);
    }
 
    public void createCard() {
       getBoardLists();
-      String cardName = "First card";
       Map<String, String> parameters = new HashMap<>();
       parameters.put("name", cardName);
       parameters.put("idList", board.getToDoListId());
 
       card = RestAssured.given()
-              .spec(specification.requestSpec())
+              .spec(reqSpecification)
               .queryParams(parameters)
               .pathParam("cardPath", CARD_PATH)
               .when()
@@ -72,11 +88,12 @@ public class TrelloApiTests {
               .extract()
               .response()
               .as(Card.class);
+
+      assertThat(card.getCardName()).isEqualTo(cardName);
    }
 
    @Test(description = "Change board's background color")
    public void updateBoardColorTest() {
-      String boardBackground = "pink";
       Map<String, String> parameters = new HashMap<>();
       parameters.put("prefs/background", boardBackground);
 
@@ -85,7 +102,7 @@ public class TrelloApiTests {
       pathParameters.put("boardId", board.getBoardId());
 
       board = RestAssured.given()
-              .spec(specification.requestSpec())
+              .spec(reqSpecification)
               .queryParams(parameters)
               .pathParams(pathParameters)
               .pathParam("boardId", board.getBoardId())
@@ -106,7 +123,7 @@ public class TrelloApiTests {
       pathParameters.put("cardId", card.getCardId());
 
       RestAssured.given()
-              .spec(specification.requestSpec())
+              .spec(reqSpecification)
               .pathParams(pathParameters)
               .when()
               .get("{cardPath}/{cardId}")
@@ -124,7 +141,7 @@ public class TrelloApiTests {
       pathParameters.put("cardPath", CARD_PATH);
 
       RestAssured.given()
-              .spec(specification.requestSpec())
+              .spec(reqSpecification)
               .pathParams(pathParameters)
               .when()
               .get("{boardPath}/{boardId}/{cardPath}")
@@ -136,7 +153,6 @@ public class TrelloApiTests {
 
    @Test(description = "Change card's background color")
    public void updateCardCoverColorTest() {
-      String cardCoverColor = "green";
       Map<String, Object> requestBody = new HashMap<>();
       Map<String, String> cover = new HashMap<>();
       cover.put("color", cardCoverColor);
@@ -147,7 +163,7 @@ public class TrelloApiTests {
       pathParameters.put("cardId", card.getCardId());
 
       card = RestAssured.given()
-              .spec(specification.requestSpec())
+              .spec(reqSpecification)
               .body(requestBody)
               .pathParams(pathParameters)
               .when()
@@ -162,14 +178,12 @@ public class TrelloApiTests {
 
    @Test(description = "Change card's description")
    public void updateCardDescriptionTest() {
-      String cardDescription = "My card description";
-
       Map<String, String> pathParameters = new HashMap<>();
       pathParameters.put("cardPath", CARD_PATH);
       pathParameters.put("cardId", card.getCardId());
 
       card = RestAssured.given()
-              .spec(specification.requestSpec())
+              .spec(reqSpecification)
               .queryParam("desc", cardDescription)
               .pathParams(pathParameters)
               .when()
@@ -185,7 +199,7 @@ public class TrelloApiTests {
    @AfterClass
    public void deleteBoard() {
       RestAssured.given()
-              .spec(specification.requestSpec())
+              .spec(reqSpecification)
               .pathParam("boardId", board.getBoardId())
               .when()
               .delete(BOARD_PATH + "/{boardId}")

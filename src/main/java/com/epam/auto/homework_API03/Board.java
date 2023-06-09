@@ -19,12 +19,6 @@ public class Board {
    @Data
    @JsonIgnoreProperties(ignoreUnknown = true)
    public static class Prefs {
-
       private String background;
-   }
-
-   public Board(String boardId, String boardName) {
-      this.boardId = boardId;
-      this.boardName = boardName;
    }
 }
