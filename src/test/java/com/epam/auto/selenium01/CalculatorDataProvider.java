@@ -16,9 +16,9 @@ public class CalculatorDataProvider extends CalculatorBaseTest {
     @DataProvider(name = "Zero Division Data")
     public static Object[][] divisionByZeroDataProvider() {
         return new Object[][]{
-                {3, 0, new NumberFormatException("Attempt to divide by zero")},
-                {3450L, 0, new NumberFormatException("Attempt to divide by zero")},
-                {-3, 0, new NumberFormatException("Attempt to divide by zero")}
+                {3, 0},
+                {3450, 0},
+                {-3, 0}
         };
     }
 

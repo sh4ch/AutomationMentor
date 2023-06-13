@@ -32,18 +32,18 @@
             <properties>
                 <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium01/MultSumCalculatorTestSuite.xml</suite.xml.name>
             </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
         </profile>
         <profile>
             <id>pow-calculator</id>
             <properties>
                 <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium01/PowCalculatorTestSuite.xml</suite.xml.name>
             </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
         </profile>
     </profiles>
 
