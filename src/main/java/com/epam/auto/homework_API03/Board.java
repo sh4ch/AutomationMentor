@@ -9,16 +9,15 @@ import lombok.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Board {
 
-   @JsonAlias("id")
-   private String boardId;
-   @JsonAlias("name")
-   private String boardName;
-   private Prefs prefs;
-   private String toDoListId;
+    @JsonAlias("id")
+    private String boardId;
+    @JsonAlias("name")
+    private String boardName;
+    private Prefs prefs;
 
-   @Data
-   @JsonIgnoreProperties(ignoreUnknown = true)
-   public static class Prefs {
-      private String background;
-   }
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Prefs {
+        private String background;
+    }
 }

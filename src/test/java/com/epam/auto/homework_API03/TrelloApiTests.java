@@ -3,7 +3,9 @@ package com.epam.auto.homework_API03;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
+
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.hamcrest.Matchers;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -14,201 +16,194 @@ import java.util.Map;
 import java.util.Properties;
 
 public class TrelloApiTests {
-   private RequestSpecification reqSpecification;
-   private Board board;
-   private Card card;
-   private final String BOARD_PATH = "boards";
-   private final String CARD_PATH = "cards";
-   private final String LIST_PATH = "lists";
-   String boardName = "Test Board";
-   String cardName = "First card";
-   String boardBackground = "pink";
-   String cardCoverColor = "green";
-   String cardDescription = "My card description";
-   String toDoListName = "To Do";
+    private RequestSpecification reqSpecification;
+    private Board board;
+    private Card card;
+    private static final String BOARD_PATH = "boards";
+    private static final String CARD_PATH = "cards";
+    private static final String LIST_PATH = "lists";
+    String boardName = "Test Board";
+    String cardName = "First card";
+    String boardBackground = "pink";
+    String cardCoverColor = "green";
+    String cardDescription = "My card description";
+    String toDoListName = "To Do";
 
-   @BeforeClass
-   public void setup() {
-      PropertiesService propertiesService = new PropertiesService();
-      Properties properties = propertiesService.getProperties();
-      SpecificationsService specification = new SpecificationsService(properties);
-      reqSpecification = specification.requestSpec();
-      createBoard();
-      createCard();
-   }
+    @BeforeClass
+    public void setup() {
 
-   public void createBoard() {
-      Map<String, String> parameters = new HashMap<>();
-      parameters.put("name", boardName);
+        PropertiesService propertiesService = new PropertiesService();
+        Properties properties = propertiesService.getProperties();
+        SpecificationsService specification = new SpecificationsService(properties);
+        reqSpecification = specification.requestSpec();
+        createBoard();
+        createCard();
 
-      board = RestAssured.given()
-              .spec(reqSpecification)
-              .queryParams(parameters)
-              .when()
-              .post(BOARD_PATH)
-              .then()
-              .extract()
-              .response()
-              .as(Board.class);
-   }
+//        RestAssured.filters(new RequestLoggingFilter());
+    }
 
-   public void getBoardLists() {
-      Map<String, String> pathParameters = new HashMap<>();
-      pathParameters.put("boardPath", BOARD_PATH);
-      pathParameters.put("boardId", board.getBoardId());
-      pathParameters.put("listPath", LIST_PATH);
+    public void createBoard() {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("name", boardName);
 
-      String toDolist = RestAssured.given()
-              .spec(reqSpecification)
-              .pathParams(pathParameters)
-              .when()
-              .get("{boardPath}/{boardId}/{listPath}")
-              .then()
-              .extract()
-              .response()
-              .path("find { it.name == '" + toDoListName + "' }.id");
-      board.setToDoListId(toDolist);
-   }
+        board = RestAssured.given()
+                .spec(reqSpecification)
+                .queryParams(parameters)
+                .when()
+                .post(BOARD_PATH)
+                .then()
+                .extract()
+                .response()
+                .as(Board.class);
+    }
 
-   public void createCard() {
-      getBoardLists();
-      Map<String, String> parameters = new HashMap<>();
-      parameters.put("name", cardName);
-      parameters.put("idList", board.getToDoListId());
+    public String getToDoListId() {
+        Map<String, String> pathParameters = new HashMap<>();
+        pathParameters.put("boardPath", BOARD_PATH);
+        pathParameters.put("boardId", board.getBoardId());
+        pathParameters.put("listPath", LIST_PATH);
 
-      card = RestAssured.given()
-              .spec(reqSpecification)
-              .queryParams(parameters)
-              .pathParam("cardPath", CARD_PATH)
-              .when()
-              .post("{cardPath}")
-              .then()
-              .statusCode(HttpStatus.SC_OK)
-              .body("name", Matchers.equalTo(cardName))
-              .extract()
-              .response()
-              .as(Card.class);
+        String toDolistId = RestAssured.given()
+                .spec(reqSpecification)
+                .pathParams(pathParameters)
+                .when()
+                .get("{boardPath}/{boardId}/{listPath}")
+                .then()
+                .extract()
+                .response()
+                .path("find { it.name == '" + toDoListName + "' }.id");
+        return toDolistId;
+    }
 
-      assertThat(card.getCardName()).isEqualTo(cardName);
-   }
+    public void createCard() {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("name", cardName);
+        parameters.put("idList", getToDoListId());
 
-   @Test(description = "Change board's background color")
-   public void updateBoardColorTest() {
-      Map<String, String> parameters = new HashMap<>();
-      parameters.put("prefs/background", boardBackground);
+        card = RestAssured.given()
+                .spec(reqSpecification)
+                .queryParams(parameters)
+                .pathParam("cardPath", CARD_PATH)
+                .when()
+                .post("{cardPath}")
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("name", Matchers.equalTo(cardName))
+                .extract()
+                .response()
+                .as(Card.class);
 
-      Map<String, String> pathParameters = new HashMap<>();
-      pathParameters.put("boardPath", BOARD_PATH);
-      pathParameters.put("boardId", board.getBoardId());
+        assertThat(card.getCardName()).isEqualTo(cardName);
+    }
 
-      board = RestAssured.given()
-              .spec(reqSpecification)
-              .queryParams(parameters)
-              .pathParams(pathParameters)
-              .pathParam("boardId", board.getBoardId())
-              .when()
-              .put("{boardPath}/{boardId}")
-              .then()
-              .statusCode(HttpStatus.SC_OK)
-              .body("prefs.background", Matchers.equalTo(boardBackground))
-              .extract()
-              .response()
-              .as(Board.class);
-   }
+    @Test(description = "Change board's background color")
+    public void updateBoardColorTest() {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("prefs/background", boardBackground);
 
-   @Test(description = "Get a card by Id")
-   public void getCardById() {
-      Map<String, String> pathParameters = new HashMap<>();
-      pathParameters.put("cardPath", CARD_PATH);
-      pathParameters.put("cardId", card.getCardId());
+        Map<String, String> pathParameters = new HashMap<>();
+        pathParameters.put("boardPath", BOARD_PATH);
+        pathParameters.put("boardId", board.getBoardId());
 
-      RestAssured.given()
-              .spec(reqSpecification)
-              .pathParams(pathParameters)
-              .when()
-              .get("{cardPath}/{cardId}")
-              .then()
-              .statusCode(HttpStatus.SC_OK)
-              .body("id", Matchers.equalTo(card.getCardId()))
-              .body("name", Matchers.equalTo(card.getCardName()));
-   }
+        RestAssured.given()
+                .spec(reqSpecification)
+                .queryParams(parameters)
+                .pathParams(pathParameters)
+                .pathParam("boardId", board.getBoardId())
+                .when()
+                .put("{boardPath}/{boardId}")
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("prefs.background", Matchers.equalTo(boardBackground));
+    }
 
-   @Test(description = "Get all cards on a board")
-   public void getBoardCards() {
-      Map<String, String> pathParameters = new HashMap<>();
-      pathParameters.put("boardPath", BOARD_PATH);
-      pathParameters.put("boardId", board.getBoardId());
-      pathParameters.put("cardPath", CARD_PATH);
+    @Test(description = "Get a card by Id")
+    public void getCardById() {
+        Map<String, String> pathParameters = new HashMap<>();
+        pathParameters.put("cardPath", CARD_PATH);
+        pathParameters.put("cardId", card.getCardId());
 
-      RestAssured.given()
-              .spec(reqSpecification)
-              .pathParams(pathParameters)
-              .when()
-              .get("{boardPath}/{boardId}/{cardPath}")
-              .then()
-              .statusCode(HttpStatus.SC_OK)
-              .body("size()", Matchers.equalTo(1))
-              .body("[0].name", Matchers.equalTo(card.getCardName()));
-   }
+        RestAssured.given()
+                .spec(reqSpecification)
+                .pathParams(pathParameters)
+                .when()
+                .get("{cardPath}/{cardId}")
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", Matchers.equalTo(card.getCardId()))
+                .body("name", Matchers.equalTo(card.getCardName()));
+    }
 
-   @Test(description = "Change card's background color")
-   public void updateCardCoverColorTest() {
-      Map<String, Object> requestBody = new HashMap<>();
-      Map<String, String> cover = new HashMap<>();
-      cover.put("color", cardCoverColor);
-      requestBody.put("cover", cover);
+    @Test(description = "Get all cards on a board")
+    public void getBoardCards() {
+        Map<String, String> pathParameters = new HashMap<>();
+        pathParameters.put("boardPath", BOARD_PATH);
+        pathParameters.put("boardId", board.getBoardId());
+        pathParameters.put("cardPath", CARD_PATH);
 
-      Map<String, String> pathParameters = new HashMap<>();
-      pathParameters.put("cardPath", CARD_PATH);
-      pathParameters.put("cardId", card.getCardId());
+        RestAssured.given()
+                .spec(reqSpecification)
+                .pathParams(pathParameters)
+                .when()
+                .get("{boardPath}/{boardId}/{cardPath}")
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("size()", Matchers.equalTo(1))
+                .body("[0].name", Matchers.equalTo(card.getCardName()));
+    }
 
-      card = RestAssured.given()
-              .spec(reqSpecification)
-              .body(requestBody)
-              .pathParams(pathParameters)
-              .when()
-              .put("{cardPath}/{cardId}")
-              .then()
-              .statusCode(HttpStatus.SC_OK)
-              .body("cover.color", Matchers.equalTo(cardCoverColor))
-              .extract()
-              .response()
-              .as(Card.class);
-   }
+    @Test(description = "Change card's background color")
+    public void updateCardCoverColorTest() {
+        Map<String, Object> requestBody = new HashMap<>();
+        Map<String, String> cover = new HashMap<>();
+        cover.put("color", cardCoverColor);
+        requestBody.put("cover", cover);
 
-   @Test(description = "Change card's description")
-   public void updateCardDescriptionTest() {
-      Map<String, String> pathParameters = new HashMap<>();
-      pathParameters.put("cardPath", CARD_PATH);
-      pathParameters.put("cardId", card.getCardId());
+        Map<String, String> pathParameters = new HashMap<>();
+        pathParameters.put("cardPath", CARD_PATH);
+        pathParameters.put("cardId", card.getCardId());
 
-      card = RestAssured.given()
-              .spec(reqSpecification)
-              .queryParam("desc", cardDescription)
-              .pathParams(pathParameters)
-              .when()
-              .put("{cardPath}/{cardId}")
-              .then()
-              .statusCode(HttpStatus.SC_OK)
-              .body("desc", Matchers.equalTo(cardDescription))
-              .extract()
-              .response()
-              .as(Card.class);
-   }
+        RestAssured.given()
+                .spec(reqSpecification)
+                .body(requestBody)
+                .pathParams(pathParameters)
+                .when()
+                .put("{cardPath}/{cardId}")
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("cover.color", Matchers.equalTo(cardCoverColor));
+    }
 
-   @AfterClass
-   public void deleteBoard() {
-      RestAssured.given()
-              .spec(reqSpecification)
-              .pathParam("boardId", board.getBoardId())
-              .when()
-              .delete(BOARD_PATH + "/{boardId}")
-              .then()
-              .statusCode(HttpStatus.SC_OK)
-              .body("$", Matchers.hasKey("_value"))
-              .body("_value", Matchers.equalTo(null));
-      card = null;
-      board = null;
-   }
+    @Test(description = "Change card's description")
+    public void updateCardDescriptionTest() {
+        Map<String, String> pathParameters = new HashMap<>();
+        pathParameters.put("cardPath", CARD_PATH);
+        pathParameters.put("cardId", card.getCardId());
+
+        RestAssured.given()
+                .spec(reqSpecification)
+                .queryParam("desc", cardDescription)
+                .pathParams(pathParameters)
+                .when()
+                .put("{cardPath}/{cardId}")
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("desc", Matchers.equalTo(cardDescription));
+    }
+
+    @AfterClass
+    public void deleteBoard() {
+        RestAssured.given()
+                .spec(reqSpecification)
+                .pathParam("boardId", board.getBoardId())
+                .when()
+                .delete(BOARD_PATH + "/{boardId}")
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("$", Matchers.hasKey("_value"))
+                .body("_value", Matchers.equalTo(null));
+        card = null;
+        board = null;
+    }
 
 }
