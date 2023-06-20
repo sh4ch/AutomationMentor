@@ -1,4 +1,4 @@
-package com.epam.auto.homework_API03;
+package com.epam.auto.api03;
 
 import io.restassured.RestAssured;
 import io.restassured.filter.Filter;
@@ -9,7 +9,6 @@ import io.restassured.internal.print.RequestPrinter;
 import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.FilterableResponseSpecification;
-
 import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -40,20 +39,25 @@ public class CustomRequestLoggingFilter implements Filter {
     }
 
     @Override
-    public Response filter(FilterableRequestSpecification requestSpec, FilterableResponseSpecification responseSpec, FilterContext ctx) {
-        FilterableRequestSpecification loggingRequestSpec = (FilterableRequestSpecification) RestAssured.given().spec(requestSpec);
+    public Response filter(FilterableRequestSpecification requestSpec,
+                           FilterableResponseSpecification responseSpec, FilterContext ctx) {
+        FilterableRequestSpecification loggingRequestSpec = (FilterableRequestSpecification) RestAssured
+                .given().spec(requestSpec);
         for (String param : blacklistedQueryParams) {
             loggingRequestSpec.removeQueryParam(param);
         }
 
         String uri = loggingRequestSpec.getURI();
         if (!showUrlEncodedUri) {
-            uri = UrlDecoder.urlDecode(uri, Charset.forName(loggingRequestSpec.getConfig().getEncoderConfig().defaultQueryParameterCharset()), true);
+            uri = UrlDecoder.urlDecode(uri, Charset.forName(loggingRequestSpec.getConfig()
+                    .getEncoderConfig().defaultQueryParameterCharset()), true);
         }
         if (logDetailSet.isEmpty()) {
-            RequestPrinter.print(loggingRequestSpec, loggingRequestSpec.getMethod(), uri, logDetail, blacklistedHeaders, stream, shouldPrettyPrint);
+            RequestPrinter.print(loggingRequestSpec, loggingRequestSpec.getMethod(), uri,
+                    logDetail, blacklistedHeaders, stream, shouldPrettyPrint);
         } else {
-            RequestPrinter.print(loggingRequestSpec, loggingRequestSpec.getMethod(), uri, logDetailSet, blacklistedHeaders, stream, shouldPrettyPrint);
+            RequestPrinter.print(loggingRequestSpec, loggingRequestSpec.getMethod(), uri,
+                    logDetailSet, blacklistedHeaders, stream, shouldPrettyPrint);
         }
 
         return ctx.next(requestSpec, responseSpec);

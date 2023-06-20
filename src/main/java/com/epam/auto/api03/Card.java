@@ -1,4 +1,4 @@
-package com.epam.auto.homework_API03;
+package com.epam.auto.api03;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,17 +10,17 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Card {
 
-   @JsonAlias("id")
+    @JsonAlias("id")
    private String cardId;
-   @JsonAlias("name")
+    @JsonAlias("name")
    private String cardName;
-   @JsonAlias("desc")
+    @JsonAlias("desc")
    private String cardDescription;
-   private Cover cover;
+    private Cover cover;
 
-   @Data
-   @JsonIgnoreProperties(ignoreUnknown = true)
-   public static class Cover {
-      private String color;
-   }
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Cover {
+        private String color;
+    }
 }

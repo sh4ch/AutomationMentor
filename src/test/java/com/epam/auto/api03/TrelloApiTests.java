@@ -1,19 +1,17 @@
-package com.epam.auto.homework_API03;
-
-import io.restassured.RestAssured;
-import io.restassured.specification.RequestSpecification;
-import org.apache.http.HttpStatus;
+package com.epam.auto.api03;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.restassured.RestAssured;
+import io.restassured.specification.RequestSpecification;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 public class TrelloApiTests {
     private RequestSpecification reqSpecification;
@@ -38,8 +36,6 @@ public class TrelloApiTests {
         reqSpecification = specification.requestSpec();
         createBoard();
         createCard();
-
-//        RestAssured.filters(new RequestLoggingFilter());
     }
 
     public void createBoard() {
@@ -205,5 +201,4 @@ public class TrelloApiTests {
         card = null;
         board = null;
     }
-
 }

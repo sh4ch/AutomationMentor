@@ -1,4 +1,4 @@
-package com.epam.auto.homework_API03;
+package com.epam.auto.api03;
 
 import java.io.IOException;
 import java.io.InputStream;
