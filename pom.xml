@@ -26,6 +26,18 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
+        <profile>
+            <id>exercise1</id>
+            <properties>
+                <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium02/Exercise1TestSuit.xml</suite.xml.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>exercise2</id>
+            <properties>
+                <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium02/Exercise2TestSuit.xml</suite.xml.name>
+            </properties>
+        </profile>
     </profiles>
 
     <dependencies>
