@@ -25,7 +25,7 @@ public class SpecificationsService {
         RestAssured.filters(new CustomRequestLoggingFilter(ignoredLogParams), new ResponseLoggingFilter());
 
         return new RequestSpecBuilder()
-                .setBaseUri(properties.get("uri").toString())
+                .setBaseUri(properties.get("uriAPI").toString())
                 .setContentType(ContentType.JSON)
                 .addQueryParams(parameters)
                 .build();
