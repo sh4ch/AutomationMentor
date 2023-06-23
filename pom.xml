@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.version>9.3</checkstyle.version>
         <maven-checkstyle-plugin.version>3.3.0</maven-checkstyle-plugin.version>
+        <assertj-core.version>3.24.2</assertj-core.version>
     </properties>
 
     <profiles>
@@ -26,6 +27,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
+        
         <profile>
             <id>exercise1</id>
             <properties>
@@ -38,24 +40,101 @@
                 <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium02/Exercise2TestSuit.xml</suite.xml.name>
             </properties>
         </profile>
+  
+        <profile>
+            <id>all-calculator</id>
+            <properties>
+                <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium01/AllCalculatorTestSuite.xml</suite.xml.name>
+        </profile>
+            <id>multsum-calculator</id>
+            <properties>
+                <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium01/MultSumCalculatorTestSuite.xml</suite.xml.name>
+            </properties>
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
+        </profile>
+        <profile>
+            <id>pow-calculator</id>
+            <properties>
+                <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium01/PowCalculatorTestSuite.xml</suite.xml.name>
+            </properties>
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
+        </profile>
     </profiles>
 
-    <dependencies>
+   <dependencies>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.3.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.10.0</version>
-        </dependency>
+        </dependency>  
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>7.8.0</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>5.3.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.24.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.28</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.15.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.15.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>calculator</groupId>
+            <artifactId>calculator</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/calculator-1.0.jar</systemPath>
         </dependency>
     </dependencies>
 
