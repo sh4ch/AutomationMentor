@@ -44,8 +44,10 @@
         <profile>
             <id>all-calculator</id>
             <properties>
-                <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium01/AllCalculatorTestSuite.xml</suite.xml.name>
+            <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium01/AllCalculatorTestSuite.xml</suite.xml.name>
+            </properties>
         </profile>
+        <profile>
             <id>multsum-calculator</id>
             <properties>
                 <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium01/MultSumCalculatorTestSuite.xml</suite.xml.name>
