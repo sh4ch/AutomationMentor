@@ -33,11 +33,6 @@ public class Exercise2Test extends WebBaseTests {
                 + elementItemText + "')]//input"));
     }
 
-    public WebElement findDropdownOptionByText(String optionText) {
-        return webDriver.findElement(By.xpath("//option[contains(., '"
-                + optionText + "')]"));
-    }
-
     @Test(testName = "Exercise 2")
 
     public void exercise2() {
