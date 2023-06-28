@@ -33,10 +33,17 @@ public class Exercise2Test extends WebBaseTests {
                 + elementItemText + "')]//input"));
     }
 
+    public void findClickAssertElementByTitle(String elementTitle) {
+        WebElement webElement = findButtonElementByText(elementTitle);
+        webElement.click();
+        assertTrue(webElement.isSelected());
+    }
+
     @Test(testName = "Exercise 2")
 
     public void exercise2() {
-        initialize();
+        openUrl();
+        login();
         //Step 5: Open through the header menu Service -> Different Elements Page
         WebElement menuDropdown = webDriver.findElement(By.cssSelector("ul.m-l8 > li.dropdown"));
         menuDropdown.click();
@@ -45,17 +52,11 @@ public class Exercise2Test extends WebBaseTests {
         assertEquals(webDriver.getTitle(), differentElementsPageTitle);
 
         //Step 6: Select checkboxes: Water, Wind
-        WebElement waterCheckbox = findButtonElementByText(checkboxWaterTitle);
-        waterCheckbox.click();
-        WebElement windCheckbox = findButtonElementByText(checkboxWindTitle);
-        windCheckbox.click();
-        assertTrue(waterCheckbox.isSelected());
-        assertTrue(windCheckbox.isSelected());
+        findClickAssertElementByTitle(checkboxWaterTitle);
+        findClickAssertElementByTitle(checkboxWindTitle);
 
         //Step 7: Select radio: Selen
-        WebElement selenRadio = findButtonElementByText(radiobuttonSelenTitle);
-        selenRadio.click();
-        assertTrue(selenRadio.isSelected());
+        findClickAssertElementByTitle(radiobuttonSelenTitle);
 
         //Step 8: Select in dropdown Yellow
         WebElement dropdown = webDriver.findElement(By.cssSelector("select.uui-form-element"));

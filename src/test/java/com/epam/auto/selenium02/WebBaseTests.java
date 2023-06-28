@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
 import org.testng.asserts.SoftAssert;
 
 public abstract class WebBaseTests {
@@ -25,12 +26,13 @@ public abstract class WebBaseTests {
     private String userNameId = "user-name";
     private String userNameText = "ROMAN IOVLEV";
 
-    public void initialize() {
+    @BeforeClass
+    public void initialSetup() {
         if (webDriver == null) {
             WebDriverManager.chromedriver().setup();
             PropertiesService propertiesService = new PropertiesService();
             Properties properties = propertiesService.getProperties();
-            uri = properties.get("uri").toString();
+            uri = properties.get("uriJDI").toString();
             username = properties.get("username").toString();
             password = properties.get("password").toString();
 
@@ -38,25 +40,31 @@ public abstract class WebBaseTests {
             webDriver = new ChromeDriver();
             webDriver.manage().window().maximize();
             webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
-            //Step 1: Open test site by URL
-            webDriver.navigate().to(uri);
-            softAssert.assertEquals(webDriver.getCurrentUrl(), uri);
-
-            //Step 2: Assert Browser title "Home Page"
-            softAssert.assertEquals(webDriver.getTitle(), homePageTitle);
-
-            //Step 3: Perform login
-            webDriver.findElement(By.id(userIconId)).click();
-            webDriver.findElement(By.id(nameId)).sendKeys(username);
-            webDriver.findElement(By.id(passwordId)).sendKeys(password);
-            webDriver.findElement(By.id(loginButtonId)).click();
-
-            //Step 4: Assert Username is loggined
-            WebElement userName = webDriver.findElement(By.id(userNameId));
-            softAssert.assertEquals(userName.getText(), userNameText);
-            System.out.println("Before class setup has finished");
         }
+    }
+
+    public void openUrl() {
+        //Step 1: Open test site by URL
+        webDriver.navigate().to(uri);
+        softAssert.assertEquals(webDriver.getCurrentUrl(), uri);
+
+        //Step 2: Assert Browser title "Home Page"
+        softAssert.assertEquals(webDriver.getTitle(), homePageTitle);
+
+    }
+
+    public void login() {
+
+        //Step 3: Perform login
+        webDriver.findElement(By.id(userIconId)).click();
+        webDriver.findElement(By.id(nameId)).sendKeys(username);
+        webDriver.findElement(By.id(passwordId)).sendKeys(password);
+        webDriver.findElement(By.id(loginButtonId)).click();
+
+        //Step 4: Assert Username is loggined
+        WebElement userName = webDriver.findElement(By.id(userNameId));
+        softAssert.assertEquals(userName.getText(), userNameText);
+        System.out.println("Before class setup has finished");
     }
 
     @AfterClass

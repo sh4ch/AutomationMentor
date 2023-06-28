@@ -27,7 +27,8 @@ public class Exercise1Test extends WebBaseTests {
     @Test(testName = "Exercise 1")
 
     public void exercise1() {
-        initialize();
+        openUrl();
+        login();
         setup();
         //Step 5: Assert that there are 4 items on the header section are displayed, and they have proper texts
         //"HOME", "CONTACT FORM", "SERVICE", "METALS & COLORS"
