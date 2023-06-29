@@ -39,7 +39,7 @@ public abstract class WebBaseTests {
             softAssert = new SoftAssert();
             webDriver = new ChromeDriver();
             webDriver.manage().window().maximize();
-            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
         }
     }
 
@@ -61,7 +61,7 @@ public abstract class WebBaseTests {
         webDriver.findElement(By.id(passwordId)).sendKeys(password);
         webDriver.findElement(By.id(loginButtonId)).click();
 
-        //Step 4: Assert Username is loggined
+        //Step 4: Assert Username is logged in
         WebElement userName = webDriver.findElement(By.id(userNameId));
         softAssert.assertEquals(userName.getText(), userNameText);
         System.out.println("Before class setup has finished");

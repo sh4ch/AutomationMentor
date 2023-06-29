@@ -8,20 +8,16 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 public class Exercise1Test extends WebBaseTests {
-    private List<String> upperMenuTexts;
     private List<String> iconTexts;
-    private List<String> leftMenuTexts;
     private String firstFrameId = "frame";
     private String frameButtonId = "frame-button";
     private String frameButtonText = "Frame Button";
 
     public void setup() {
-        upperMenuTexts = Arrays.asList("HOME", "CONTACT FORM", "SERVICE", "METALS & COLORS");
         iconTexts = Arrays.asList("To include good practices\nand ideas from successful\nEPAM project",
                 "To be flexible and\ncustomizable",
                 "To be multiplatform",
                 "Already have good base\n(about 20 internal and\nsome external projects),\nwish to get more…");
-        leftMenuTexts = Arrays.asList("Home", "Contact form", "Service", "Metals & Colors", "Elements packs");
     }
 
     @Test(testName = "Exercise 1")
@@ -41,7 +37,7 @@ public class Exercise1Test extends WebBaseTests {
             actualMenuTexts.add(menuItem.getText());
             softAssert.assertTrue(menuItem.isDisplayed());
         }
-        softAssert.assertEquals(actualMenuTexts, upperMenuTexts);
+        softAssert.assertEquals(actualMenuTexts, MenuTexts.getUpperMenuTexts());
 
         //Step 6: Assert that there are 4 images on the Index Page, and they are displayed
         List<WebElement> indexImages = webDriver.findElements(By.cssSelector(".icons-benefit"));
@@ -82,10 +78,10 @@ public class Exercise1Test extends WebBaseTests {
 
         List<String> actualLeftMenuTexts = new ArrayList<>();
         for (WebElement leftMenuItem : leftMenuElements) {
-            actualLeftMenuTexts.add(leftMenuItem.getText());
+            actualLeftMenuTexts.add(leftMenuItem.getText().toUpperCase());
             softAssert.assertTrue(leftMenuItem.isDisplayed());
         }
-        softAssert.assertEquals(actualLeftMenuTexts, leftMenuTexts);
+        softAssert.assertEquals(actualLeftMenuTexts, MenuTexts.getLeftMenuTexts());
 
         softAssert.assertAll();
     }
