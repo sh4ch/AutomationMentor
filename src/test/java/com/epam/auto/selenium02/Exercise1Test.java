@@ -21,7 +21,6 @@ public class Exercise1Test extends WebBaseTests {
     }
 
     @Test(testName = "Exercise 1")
-
     public void exercise1() {
         openUrl();
         login();

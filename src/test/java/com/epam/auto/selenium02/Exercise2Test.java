@@ -66,24 +66,38 @@ public class Exercise2Test extends WebBaseTests {
         assertActionInLog(DropdownOptionsTexts.getDropdownOptionsTexts(), ElementTypes.DROPDOWN, logBox);
     }
 
+    public void findElementAndClick(String item) {
+        WebElement element = findButtonElementByText(item);
+        element.click();
+    }
+
     public void assertActionInLog(List<String> items, ElementTypes elementType, WebElement logBox) {
         for (String item : items) {
-            String logEntryText = item;
+            StringBuilder logEntryText = new StringBuilder(item);
 
-            if (elementType == ElementTypes.CHECKBOX || elementType == ElementTypes.RADIOBUTTON) {
-                WebElement element = findButtonElementByText(item);
-                element.click();
-                if (elementType == ElementTypes.CHECKBOX) {
-                    logEntryText += ": condition changed to " + (element.isSelected() ? "true" : "false");
+            switch (elementType) {
+                case CHECKBOX -> {
+                    findElementAndClick(item);
+                    logEntryText.append(": condition changed to ")
+                            .append(findButtonElementByText(item).isSelected() ? "true" : "false");
                 }
-            } else if (elementType == ElementTypes.DROPDOWN) {
-                WebElement dropdown = webDriver.findElement(By.cssSelector("select.uui-form-element"));
-                Select dropdownSelect = new Select(dropdown);
-                dropdownSelect.selectByVisibleText(item);
+                case RADIOBUTTON -> findElementAndClick(item);
+                case DROPDOWN -> {
+                    WebElement dropdown = webDriver.findElement(By.cssSelector("select.uui-form-element"));
+                    Select dropdownSelect = new Select(dropdown);
+                    dropdownSelect.selectByVisibleText(item);
+                }
+                default -> throw new IllegalArgumentException("Unsupported element type: " + elementType);
             }
 
             WebElement logEntry = logBox.findElement(By.xpath("//li[contains(., '" + logEntryText + "')]"));
             assertTrue(logEntry.isDisplayed());
         }
+    }
+
+    public enum ElementTypes {
+        CHECKBOX,
+        RADIOBUTTON,
+        DROPDOWN;
     }
 }

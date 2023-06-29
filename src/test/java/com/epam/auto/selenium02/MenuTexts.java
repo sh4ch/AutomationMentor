@@ -1,6 +1,5 @@
 package com.epam.auto.selenium02;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,11 +22,9 @@ public enum MenuTexts {
     }
 
     public static List<String> getLeftMenuTexts() {
-        List<String> leftMenuTexts = new ArrayList<>();
-        for (MenuTexts item : MenuTexts.values()) {
-            leftMenuTexts.add(item.getText());
-        }
-        return leftMenuTexts;
+        return Arrays.stream(MenuTexts.values())
+                .map(MenuTexts::getText)
+                .collect(Collectors.toList());
     }
 
     public static List<String> getUpperMenuTexts() {
