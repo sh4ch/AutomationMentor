@@ -44,7 +44,7 @@
         </profile>
 
         <profile>
-            <id>all-exercises</id>
+            <id>all-exercises-hw2</id>
             <properties>
                 <suite.xml.name>
                     ${project.basedir}/src/test/resources/com/epam/auto/selenium02/AllExercisesTestSuit.xml
@@ -53,14 +53,14 @@
         </profile>
 
         <profile>
-            <id>exercise1</id>
+            <id>exercise1-hw2</id>
             <properties>
                 <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium02/Exercise1TestSuit.xml
                 </suite.xml.name>
             </properties>
         </profile>
         <profile>
-            <id>exercise2</id>
+            <id>exercise2-hw2</id>
             <properties>
                 <suite.xml.name>${project.basedir}/src/test/resources/com/epam/auto/selenium02/Exercise2TestSuit.xml
                 </suite.xml.name>

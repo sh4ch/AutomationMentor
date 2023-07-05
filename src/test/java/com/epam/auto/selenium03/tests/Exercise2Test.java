@@ -3,78 +3,71 @@ package com.epam.auto.selenium03.tests;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import com.epam.auto.selenium03.page.DifferentElementsPage;
-import com.epam.auto.selenium03.page.HeaderMenu;
-import com.epam.auto.selenium03.page.LogBox;
-import com.epam.auto.selenium03.page.ServiceMenu;
+import com.epam.auto.selenium03.CheckboxesTexts;
+import com.epam.auto.selenium03.DifferentElementsPage;
+import com.epam.auto.selenium03.DropdownOptionsTexts;
+import com.epam.auto.selenium03.ElementTypes;
+import com.epam.auto.selenium03.HeaderMenu;
+import com.epam.auto.selenium03.LogBox;
+import com.epam.auto.selenium03.RadioButtonsTexts;
+import com.epam.auto.selenium03.ServiceMenu;
+import java.util.List;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 public class Exercise2Test extends WebBaseTests {
-    private String differentElementsPageTitle = "Different Elements";
-    private String yellowOptionText = "Yellow";
-    private String[] checkboxNames = {"Water", "Wind", "Earth", "Fire"};
-    private String[] radioNames = {"Gold", "Silver", "Bronze", "Selen"};
-    private String[] dropdownOptions = {"Yellow", "Red", "Green", "Blue"};
-
-    private String checkboxWaterTitle = "Water";
-    private String checkboxWindTitle = "Wind";
-    private String radiobuttonSelenTitle = "Selen";
-    private String checkboxElementType = "checkbox";
-    private String radiobuttonElementType = "radio";
-    private String dropdownElementType = "dropdown";
+    private String differentElementsMenuText = "Different elements";
+    private DifferentElementsPage differentElementsPage;
+    private LogBox logBox;
 
     @Test(testName = "Exercise 2")
 
     public void exercise2() {
-        initialize();
         //Step 5: Open through the header menu Service -> Different Elements Page
-        HeaderMenu headerMenu = new HeaderMenu(webDriver);
-        headerMenu.openServiceMenu();
+        HeaderMenu headerMenu = indexPage.getHeaderMenu();
 
-        ServiceMenu serviceMenu = new ServiceMenu(webDriver);
-        serviceMenu.openDifferentElementsPage();
-        DifferentElementsPage differentElementsPage = new DifferentElementsPage(webDriver);
-        assertEquals(differentElementsPage.getTitle(), differentElementsPageTitle);
+        ServiceMenu serviceMenu = headerMenu.openServiceMenu();
+        differentElementsPage = serviceMenu.openDifferentElementsPage();
+        assertEquals(differentElementsPage.getTitle().toLowerCase(), differentElementsMenuText.toLowerCase());
 
         //Step 6: Select checkboxes: Water, Wind
-        differentElementsPage.selectItem(checkboxWaterTitle);
-        differentElementsPage.selectItem(checkboxWindTitle);
-        assertTrue(differentElementsPage.isItemSelected(checkboxWaterTitle));
-        assertTrue(differentElementsPage.isItemSelected(checkboxWindTitle));
+        selectElementAndAssert(CheckboxesTexts.WATER.getText());
+        selectElementAndAssert(CheckboxesTexts.WIND.getText());
 
         //Step 7: Select radio: Selen
-        differentElementsPage.selectItem(radiobuttonSelenTitle);
-        assertTrue(differentElementsPage.isItemSelected(radiobuttonSelenTitle));
+        selectElementAndAssert(RadioButtonsTexts.SELEN.getText());
 
         //Step 8: Select in dropdown Yellow
-        differentElementsPage.selectDropdownOption(yellowOptionText);
-        assertEquals(differentElementsPage.getSelectedDropdownOptionText(), yellowOptionText);
+        differentElementsPage.selectDropdownOption(DropdownOptionsTexts.YELLOW.getText());
+        assertEquals(differentElementsPage.getSelectedDropdownOptionText(), DropdownOptionsTexts.YELLOW.getText());
 
         //Step 9: Assert that
         // for each checkbox there is an individual log row and value is corresponded to the status of checkbox
-        LogBox logBox = new LogBox(webDriver);
+        logBox = differentElementsPage.getLogBox();
 
-        assertActionInLogBox(checkboxNames, checkboxElementType, logBox, differentElementsPage);
+        assertActionInLogBox(CheckboxesTexts.getCheckboxesTexts(), ElementTypes.CHECKBOX);
 
         // for radio button there is a log row and value is corresponded to the status of radio button
-        assertActionInLogBox(radioNames, radiobuttonElementType, logBox, differentElementsPage);
+        assertActionInLogBox(RadioButtonsTexts.getRadioButtonsTexts(), ElementTypes.RADIOBUTTON);
 
         // for dropdown there is a log row and value is corresponded to the selected value
-        assertActionInLogBox(dropdownOptions, dropdownElementType, logBox, differentElementsPage);
+        assertActionInLogBox(DropdownOptionsTexts.getDropdownOptionsTexts(), ElementTypes.DROPDOWN);
     }
 
-    public void assertActionInLogBox(String[] items, String elementType, LogBox logBox,
-                                     DifferentElementsPage differentElementsPage) {
+    public void assertActionInLogBox(List<String> items, ElementTypes elementType) {
         for (String item : items) {
-            if (elementType.equals(DifferentElementsPage.CHECKBOX_ELEMENT_TYPE)
-                    || elementType.equals(DifferentElementsPage.RADIOBUTTON_ELEMENT_TYPE)) {
-                differentElementsPage.selectItem(item);
-            } else if (elementType.equals(DifferentElementsPage.DROPDOWN_ELEMENT_TYPE)) {
-                differentElementsPage.selectDropdownOption(item);
+            switch (elementType) {
+                case CHECKBOX, RADIOBUTTON -> differentElementsPage.selectItem(item);
+                case DROPDOWN -> differentElementsPage.selectDropdownOption(item);
+                default -> throw new IllegalArgumentException("Unsupported element type: " + elementType);
             }
             WebElement logEntry = logBox.getLogRecord(item, elementType, differentElementsPage);
             assertTrue(logEntry.isDisplayed());
         }
+    }
+
+    public void selectElementAndAssert(String elementTitle) {
+        differentElementsPage.selectItem(elementTitle);
+        assertTrue(differentElementsPage.isItemSelected(elementTitle));
     }
 }

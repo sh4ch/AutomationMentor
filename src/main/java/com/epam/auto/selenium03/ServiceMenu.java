@@ -1,4 +1,4 @@
-package com.epam.auto.selenium03.page;
+package com.epam.auto.selenium03;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -16,8 +16,9 @@ public class ServiceMenu extends BasePage {
                 + menuItemText + "')]"));
     }
 
-    public void openDifferentElementsPage() {
+    public DifferentElementsPage openDifferentElementsPage() {
         WebElement differentElementMenu = findMenuItemByText(differentElementsMenuText);
         differentElementMenu.click();
+        return new DifferentElementsPage(webDriver);
     }
 }

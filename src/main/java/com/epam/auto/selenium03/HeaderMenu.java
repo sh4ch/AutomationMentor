@@ -1,4 +1,4 @@
-package com.epam.auto.selenium03.page;
+package com.epam.auto.selenium03;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,8 @@ public class HeaderMenu extends BasePage {
         return menuElement.isDisplayed();
     }
 
-    public void openServiceMenu() {
+    public ServiceMenu openServiceMenu() {
         serviceMenuDropdown.click();
+        return new ServiceMenu(webDriver);
     }
 }

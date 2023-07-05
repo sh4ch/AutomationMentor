@@ -1,4 +1,4 @@
-package com.epam.auto.selenium03.page;
+package com.epam.auto.selenium03;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,8 @@ public class IndexPage extends BasePage {
     private List<WebElement> indexImages;
     @FindBy(css = ".benefit-txt")
     private List<WebElement> indexImagesTexts;
+
+    private FirstFramePage firstFramePage;
 
     public IndexPage(WebDriver webDriver) {
         super(webDriver);
@@ -36,5 +38,9 @@ public class IndexPage extends BasePage {
 
     public boolean isIndexImageDisplayed(WebElement indexImage) {
         return indexImage.isDisplayed();
+    }
+
+    public FirstFramePage getFirstFramePage() {
+        return new FirstFramePage(webDriver);
     }
 }

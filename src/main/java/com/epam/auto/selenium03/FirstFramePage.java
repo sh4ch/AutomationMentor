@@ -1,4 +1,4 @@
-package com.epam.auto.selenium03.page;
+package com.epam.auto.selenium03;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

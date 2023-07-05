@@ -1,4 +1,4 @@
-package com.epam.auto.selenium03.page;
+package com.epam.auto.selenium03;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class LeftMenu extends BasePage {
     public List<String> getLeftMenuTexts() {
         List<String> menuTexts = new ArrayList<>();
         for (WebElement menuItem : getLeftMenuElements()) {
-            menuTexts.add(menuItem.getText());
+            menuTexts.add(menuItem.getText().toUpperCase());
         }
         return menuTexts;
     }
