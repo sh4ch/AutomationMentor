@@ -10,7 +10,6 @@ public class FirstFramePage extends BasePage {
     private WebElement firstFrame;
     @FindBy(id = "frame-button")
     private WebElement frameButton;
-    private String valueAttribute = "value";
 
     public FirstFramePage(WebDriver webDriver) {
         super(webDriver);
@@ -21,11 +20,7 @@ public class FirstFramePage extends BasePage {
         return firstFrame;
     }
 
-    public void switchToFrame() {
-        webDriver.switchTo().frame(getFirstFrame());
-    }
-
     public String getFrameButtonValue() {
-        return frameButton.getAttribute(valueAttribute);
+        return frameButton.getAttribute("value");
     }
 }

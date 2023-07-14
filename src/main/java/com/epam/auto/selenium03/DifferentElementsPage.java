@@ -11,9 +11,6 @@ import org.openqa.selenium.support.ui.Select;
 public class DifferentElementsPage extends BasePage {
     @FindBy(css = "select.uui-form-element")
     private WebElement dropdown;
-    public static final String CHECKBOX_ELEMENT_TYPE = "checkbox";
-    public static final String RADIOBUTTON_ELEMENT_TYPE = "radio";
-    public static final String DROPDOWN_ELEMENT_TYPE = "dropdown";
 
     public DifferentElementsPage(WebDriver webDriver) {
         super(webDriver);
@@ -27,10 +24,6 @@ public class DifferentElementsPage extends BasePage {
 
     public void selectItem(String itemTitle) {
         findButtonElementByText(itemTitle).click();
-    }
-
-    public boolean isItemSelected(String itemTitle) {
-        return findButtonElementByText(itemTitle).isSelected();
     }
 
     private Select getDropdownSelect() {

@@ -13,8 +13,6 @@ public class IndexPage extends BasePage {
     @FindBy(css = ".benefit-txt")
     private List<WebElement> indexImagesTexts;
 
-    private FirstFramePage firstFramePage;
-
     public IndexPage(WebDriver webDriver) {
         super(webDriver);
         PageFactory.initElements(webDriver, this);
@@ -36,11 +34,11 @@ public class IndexPage extends BasePage {
         return imagesTexts;
     }
 
-    public boolean isIndexImageDisplayed(WebElement indexImage) {
-        return indexImage.isDisplayed();
-    }
-
     public FirstFramePage getFirstFramePage() {
         return new FirstFramePage(webDriver);
+    }
+
+    public void switchToFirstFrame(FirstFramePage firstFramePage) {
+        webDriver.switchTo().frame(firstFramePage.getFirstFrame());
     }
 }

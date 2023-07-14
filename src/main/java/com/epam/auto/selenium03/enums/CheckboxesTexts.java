@@ -1,4 +1,4 @@
-package com.epam.auto.selenium03;
+package com.epam.auto.selenium03.enums;
 
 import java.util.ArrayList;
 import java.util.List;

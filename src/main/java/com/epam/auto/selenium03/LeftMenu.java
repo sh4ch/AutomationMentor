@@ -27,8 +27,4 @@ public class LeftMenu extends BasePage {
         }
         return menuTexts;
     }
-
-    public boolean isLeftMenuElementDisplayed(WebElement menuElement) {
-        return menuElement.isDisplayed();
-    }
 }

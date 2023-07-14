@@ -30,10 +30,6 @@ public class HeaderMenu extends BasePage {
         return menuTexts;
     }
 
-    public boolean isMenuElementDisplayed(WebElement menuElement) {
-        return menuElement.isDisplayed();
-    }
-
     public ServiceMenu openServiceMenu() {
         serviceMenuDropdown.click();
         return new ServiceMenu(webDriver);

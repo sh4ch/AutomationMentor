@@ -12,7 +12,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
 import org.testng.asserts.SoftAssert;
 
 public abstract class WebBaseTests {
@@ -21,8 +20,8 @@ public abstract class WebBaseTests {
     private String uri;
     private String username;
     private String userPassword;
-    private String homePageTitle = "Home Page";
-    private String userNameText = "ROMAN IOVLEV";
+    private String expectedHomePageTitle = "Home Page";
+    private String expectedUserNameText = "ROMAN IOVLEV";
     protected HomePage homePage;
     protected IndexPage indexPage;
 
@@ -39,7 +38,7 @@ public abstract class WebBaseTests {
             softAssert = new SoftAssert();
             webDriver = new ChromeDriver();
             webDriver.manage().window().maximize();
-            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
         }
         homePage = new HomePage(webDriver);
         indexPage = new IndexPage(webDriver);
@@ -53,7 +52,7 @@ public abstract class WebBaseTests {
         softAssert.assertEquals(webDriver.getCurrentUrl(), uri);
 
         //Step 2: Assert Browser title "Home Page"
-        softAssert.assertEquals(homePage.getTitle(), homePageTitle);
+        softAssert.assertEquals(homePage.getTitle(), expectedHomePageTitle);
     }
 
     public void login() {
@@ -62,7 +61,7 @@ public abstract class WebBaseTests {
         loginPage.login(username, userPassword);
 
         //Step 4: Assert Username is logged in
-        softAssert.assertEquals(homePage.getUserName(), userNameText);
+        softAssert.assertEquals(homePage.getUserName(), expectedUserNameText);
     }
 
     @AfterClass
