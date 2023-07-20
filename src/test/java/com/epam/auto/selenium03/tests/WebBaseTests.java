@@ -1,8 +1,6 @@
 package com.epam.auto.selenium03.tests;
 
 import com.epam.auto.selenium03.HomePage;
-import com.epam.auto.selenium03.IndexPage;
-import com.epam.auto.selenium03.LoginPage;
 import com.epam.auto.selenium03.PropertiesService;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.time.Duration;
@@ -22,8 +20,7 @@ public abstract class WebBaseTests {
     private String userPassword;
     private String expectedHomePageTitle = "Home Page";
     private String expectedUserNameText = "ROMAN IOVLEV";
-    protected HomePage homePage;
-    protected IndexPage indexPage;
+    private HomePage homePage;
 
     @BeforeClass
     public void initialSetup() {
@@ -41,7 +38,6 @@ public abstract class WebBaseTests {
             webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
         }
         homePage = new HomePage(webDriver);
-        indexPage = new IndexPage(webDriver);
         openUrl();
         login();
     }
@@ -57,8 +53,7 @@ public abstract class WebBaseTests {
 
     public void login() {
         //Step 3: Perform login
-        LoginPage loginPage = homePage.getLoginPage();
-        loginPage.login(username, userPassword);
+        homePage.login(username, userPassword);
 
         //Step 4: Assert Username is logged in
         softAssert.assertEquals(homePage.getUserName(), expectedUserNameText);

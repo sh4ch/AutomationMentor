@@ -1,5 +1,6 @@
 package com.epam.auto.selenium03;
 
+import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,10 +8,11 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
-
 public class DifferentElementsPage extends BasePage {
     @FindBy(css = "select.uui-form-element")
     private WebElement dropdown;
+    @FindBy(css = ".logs li")
+    private List<WebElement> logRecords;
 
     public DifferentElementsPage(WebDriver webDriver) {
         super(webDriver);
@@ -36,5 +38,9 @@ public class DifferentElementsPage extends BasePage {
 
     public String getSelectedDropdownOptionText() {
         return getDropdownSelect().getFirstSelectedOption().getText();
+    }
+
+    public List<WebElement> getLogRecord() {
+        return logRecords;
     }
 }

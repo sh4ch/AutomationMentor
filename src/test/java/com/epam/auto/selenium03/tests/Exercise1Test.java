@@ -1,8 +1,6 @@
 package com.epam.auto.selenium03.tests;
 
-import com.epam.auto.selenium03.FirstFramePage;
-import com.epam.auto.selenium03.HeaderMenu;
-import com.epam.auto.selenium03.LeftMenu;
+import com.epam.auto.selenium03.HomePage;
 import com.epam.auto.selenium03.enums.MenuTexts;
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 public class Exercise1Test extends WebBaseTests {
+    private HomePage homePage;
     private List<String> expectedIconTexts = Arrays
             .asList("To include good practices\nand ideas from successful\nEPAM project",
             "To be flexible and\ncustomizable",
@@ -21,48 +20,44 @@ public class Exercise1Test extends WebBaseTests {
     public void exercise1() {
         //Step 5: Assert that there are 4 items on the header section are displayed, and they have proper texts
         //"HOME", "CONTACT FORM", "SERVICE", "METALS & COLORS"
-        HeaderMenu headerMenu = indexPage.getHeaderMenu();
-        softAssert.assertEquals(headerMenu.getMenuElements().size(), 4);
+        homePage = new HomePage(webDriver);
+        softAssert.assertEquals(homePage.getMenuElements().size(), 4);
 
-        for (WebElement menuItem : headerMenu.getMenuElements()) {
+        for (WebElement menuItem : homePage.getMenuElements()) {
             softAssert.assertTrue(menuItem.isDisplayed());
         }
-        softAssert.assertEquals(headerMenu.getMenuTexts(), MenuTexts.getUpperMenuTexts());
+        softAssert.assertEquals(homePage.getMenuTexts(), MenuTexts.getUpperMenuTexts());
 
         //Step 6: Assert that there are 4 images on the Index Page, and they are displayed
-        softAssert.assertEquals(indexPage.getIndexImages().size(), 4);
+        softAssert.assertEquals(homePage.getIndexImages().size(), 4);
 
-        for (WebElement indexImage : indexPage.getIndexImages()) {
+        for (WebElement indexImage : homePage.getIndexImages()) {
             softAssert.assertTrue(indexImage.isDisplayed());
         }
 
         //Step 7: Assert that there are 4 texts on the Index Page under icons, and they have proper text
-        softAssert.assertEquals(indexPage.getIndexImagesTextElements().size(), 4);
+        softAssert.assertEquals(homePage.getIndexImagesTextElements().size(), 4);
 
-        softAssert.assertEquals(indexPage.getIndexImagesTexts(), expectedIconTexts);
+        softAssert.assertEquals(homePage.getIndexImagesTexts(), expectedIconTexts);
 
         //Step 8: Assert that there is the iframe with “Frame Button” exist
-        FirstFramePage firstFramePage = indexPage.getFirstFramePage();
-        WebElement frameElement = firstFramePage.getFirstFrame();
-        softAssert.assertTrue(frameElement != null);
+        softAssert.assertTrue(homePage.getFirstFrame().isDisplayed());
 
         //Step 9: Switch to the iframe and check that there is “Frame Button” in the iframe
-        indexPage.switchToFirstFrame(firstFramePage);
-        String buttonName = firstFramePage.getFrameButtonValue();
-        softAssert.assertEquals(buttonName, expectedFrameButtonText);
+        homePage.switchToFrame();
+        softAssert.assertEquals(homePage.getFrameButtonValue(), expectedFrameButtonText);
 
         //Step 10: Switch to original window back
-        indexPage.switchToDefault();
+        homePage.switchToDefault();
 
         //Step 11: Assert that there are 5 items in the Left Section are displayed, and they have proper text
         // “Home”, “Contact form”, “Service”, “Metals & Colors”, “Elements packs”
-        LeftMenu leftMenu = indexPage.getLeftMenu();
-        softAssert.assertEquals(leftMenu.getLeftMenuElements().size(), 5);
+        softAssert.assertEquals(homePage.getLeftMenuElements().size(), 5);
 
-        for (WebElement leftMenuItem : leftMenu.getLeftMenuElements()) {
+        for (WebElement leftMenuItem : homePage.getLeftMenuElements()) {
             softAssert.assertTrue(leftMenuItem.isDisplayed());
         }
-        softAssert.assertEquals(leftMenu.getLeftMenuTexts(), MenuTexts.getLeftMenuTexts());
+        softAssert.assertEquals(homePage.getLeftMenuTexts(), MenuTexts.getLeftMenuTexts());
 
         softAssert.assertAll();
     }

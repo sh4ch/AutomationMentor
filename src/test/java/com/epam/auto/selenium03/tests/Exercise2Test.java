@@ -4,9 +4,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import com.epam.auto.selenium03.DifferentElementsPage;
-import com.epam.auto.selenium03.HeaderMenu;
-import com.epam.auto.selenium03.LogBox;
-import com.epam.auto.selenium03.ServiceMenu;
+import com.epam.auto.selenium03.HomePage;
 import com.epam.auto.selenium03.enums.CheckboxesTexts;
 import com.epam.auto.selenium03.enums.DropdownOptionsTexts;
 import com.epam.auto.selenium03.enums.ElementTypes;
@@ -16,15 +14,15 @@ import org.testng.annotations.Test;
 
 public class Exercise2Test extends WebBaseTests {
     private String expectedDifferentElementsMenuText = "Different elements";
+    private HomePage homePage;
     private DifferentElementsPage differentElementsPage;
 
     @Test(testName = "Exercise 2")
     public void exercise2() {
         //Step 5: Open through the header menu Service -> Different Elements Page
-        HeaderMenu headerMenu = indexPage.getHeaderMenu();
-
-        ServiceMenu serviceMenu = headerMenu.openServiceMenu();
-        differentElementsPage = serviceMenu.openDifferentElementsPage();
+        homePage = new HomePage(webDriver);
+        differentElementsPage = new DifferentElementsPage(webDriver);
+        homePage.openDifferentElementsPage();
 
         assertEquals(differentElementsPage.getTitle().toLowerCase(), expectedDifferentElementsMenuText.toLowerCase());
 
@@ -41,24 +39,34 @@ public class Exercise2Test extends WebBaseTests {
 
         //Step 9: Assert that
         // for each checkbox there is an individual log row and value is corresponded to the status of checkbox
-        LogBox logBox = differentElementsPage.getLogBox();
-        getLogsAndVerifyActions(CheckboxesTexts.getCheckboxesTexts(), ElementTypes.CHECKBOX, logBox);
+        getLogsAndVerifyActions(CheckboxesTexts.getCheckboxesTexts(), ElementTypes.CHECKBOX);
 
         // for radio button there is a log row and value is corresponded to the status of radio button
-        getLogsAndVerifyActions(RadioButtonsTexts.getRadioButtonsTexts(), ElementTypes.RADIOBUTTON, logBox);
+        getLogsAndVerifyActions(RadioButtonsTexts.getRadioButtonsTexts(), ElementTypes.RADIOBUTTON);
 
         // for dropdown there is a log row and value is corresponded to the selected value
-        getLogsAndVerifyActions(DropdownOptionsTexts.getDropdownOptionsTexts(), ElementTypes.DROPDOWN, logBox);
+        getLogsAndVerifyActions(DropdownOptionsTexts.getDropdownOptionsTexts(), ElementTypes.DROPDOWN);
     }
 
-    public void getLogsAndVerifyActions(List<String> items, ElementTypes elementType, LogBox logBox) {
+    public void getLogsAndVerifyActions(List<String> items, ElementTypes elementType) {
+
         for (String item : items) {
+            StringBuilder logEntryText = new StringBuilder(item);
+
             switch (elementType) {
-                case CHECKBOX, RADIOBUTTON -> differentElementsPage.selectItem(item);
+                case CHECKBOX -> {
+                    differentElementsPage.selectItem(item);
+                    logEntryText.append(": condition changed to ")
+                            .append(differentElementsPage
+                                    .findButtonElementByText(item)
+                                    .isSelected() ? "true" : "false");
+                }
+                case RADIOBUTTON -> differentElementsPage.selectItem(item);
                 case DROPDOWN -> differentElementsPage.selectDropdownOption(item);
                 default -> throw new IllegalArgumentException("Unsupported element type: " + elementType);
             }
-            assertTrue(logBox.getLogRecord().stream().anyMatch(record -> record.getText().contains(item)));
+            assertTrue(differentElementsPage.getLogRecord().stream()
+                    .anyMatch(record -> record.getText().contains(logEntryText)));
         }
     }
 
