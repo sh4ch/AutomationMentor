@@ -15,10 +15,12 @@
         <checkstyle.version>9.3</checkstyle.version>
         <maven-checkstyle-plugin.version>3.3.0</maven-checkstyle-plugin.version>
         <assertj-core.version>3.24.2</assertj-core.version>
+        <allure.version>2.23.0</allure.version>
+        <aspectj.version>1.9.19</aspectj.version>
     </properties>
 
     <profiles>
-       <profile>
+        <profile>
             <id>all-calculator</id>
             <properties>
                 <suite.xml.name>
@@ -73,6 +75,14 @@
                     ${project.basedir}/src/test/resources/com/epam/auto/selenium03/AllExercisesTestSuit.xml
                 </suite.xml.name>
             </properties>
+        </profile>
+        <profile>
+            <id>all-exercises-hw4</id>
+            <properties>
+                <suite.xml.name>
+                    ${project.basedir}/src/test/resources/com/epam/auto/selenium04/AllExercisesTestSuit.xml
+                </suite.xml.name>
+            </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -97,7 +107,7 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.10.0</version>
-        </dependency>  
+        </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -159,6 +169,12 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/calculator-1.0.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -199,12 +215,46 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
+                    <argLine>
+                        --illegal-access=permit
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                    </argLine>
                     <suiteXmlFiles>
                         <suiteXmlFile>${suite.xml.name}</suiteXmlFile>
                     </suiteXmlFiles>
+                    <parallel>none</parallel>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>14</source>
+                    <target>14</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <excludeDefaults>true</excludeDefaults>
+        <plugins>
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.12.0</version>
+                <configuration>
+                    <reportVersion>${allure.version}</reportVersion>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

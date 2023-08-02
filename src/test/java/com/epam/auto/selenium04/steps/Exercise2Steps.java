@@ -1,6 +1,5 @@
-package com.epam.auto.selenium03.tests;
+package com.epam.auto.selenium04.steps;
 
-import static io.qameta.allure.Allure.step;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -10,50 +9,53 @@ import com.epam.auto.selenium03.enums.CheckboxesTexts;
 import com.epam.auto.selenium03.enums.DropdownOptionsTexts;
 import com.epam.auto.selenium03.enums.ElementTypes;
 import com.epam.auto.selenium03.enums.RadioButtonsTexts;
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
+import com.epam.auto.selenium04.tests.WebBaseTests;
+import io.qameta.allure.Step;
 import java.util.List;
-import org.testng.annotations.Test;
+import org.openqa.selenium.WebDriver;
 
-@Epic("Selenium 4 Exercises")
-@Feature("Exercise 1")
-public class Exercise2Test extends WebBaseTests {
+public class Exercise2Steps extends WebBaseSteps {
     private String expectedDifferentElementsMenuText = "Different elements";
     private HomePage homePage;
     private DifferentElementsPage differentElementsPage;
 
-    @Test(description = "Exercise 2")
-    @Story("Exercise 2 Test")
-    @Description("Testing of Different Elements page")
-    public void exercise2() {
-        step("Step 5: Open through the header menu Service -> Different Elements Page");
-        homePage = new HomePage(webDriver);
-        differentElementsPage = new DifferentElementsPage(webDriver);
+    public Exercise2Steps(WebDriver driver) {
+        homePage = new HomePage(driver);
+        differentElementsPage = new DifferentElementsPage(driver);
+    }
+
+    @Step("Step 5: Open through the header menu Service -> Different Elements Page")
+    public void openDiffElPageCheckTitle() {
         homePage.openDifferentElementsPage();
-
         assertEquals(differentElementsPage.getTitle().toLowerCase(), expectedDifferentElementsMenuText.toLowerCase());
+    }
 
-        step("Step 6: Select checkboxes: Water, Wind");
+    @Step("Step 6: Select checkboxes: Water, Wind")
+    public void selectWaterWindCheckSelection() {
         selectElementAndVerifySelection(CheckboxesTexts.WATER.getText());
         selectElementAndVerifySelection(CheckboxesTexts.WIND.getText());
+    }
 
-        step("Step 7: Select radio: Selen");
+    @Step("Step 7: Select radio: Selen")
+    public void selectSelenCheckSelection() {
         selectElementAndVerifySelection(RadioButtonsTexts.SELEN.getText());
+    }
 
-        step("Step 8: Select in dropdown Yellow");
+    @Step("Step 8: Select in dropdown Yellow")
+    public void selectYellowCheckSelection() {
         differentElementsPage.selectDropdownOption(DropdownOptionsTexts.YELLOW.getText());
         assertEquals(differentElementsPage.getSelectedDropdownOptionText(), DropdownOptionsTexts.YELLOW.getText());
+    }
 
-        step("Step 9: Assert that for each checkbox there is an individual log row "
-                + "and value is corresponded to the status of checkbox");
+    @Step("Step 9: Assert that")
+            public void performDropRadioBoxActionsCheckLogs() {
+        // for each checkbox there is an individual log row and value is corresponded to the status of checkbox
         getLogsAndVerifyActions(CheckboxesTexts.getCheckboxesTexts(), ElementTypes.CHECKBOX);
 
-        step("for radio button there is a log row and value is corresponded to the status of radio button");
+        // for radio button there is a log row and value is corresponded to the status of radio button
         getLogsAndVerifyActions(RadioButtonsTexts.getRadioButtonsTexts(), ElementTypes.RADIOBUTTON);
 
-        step("for dropdown there is a log row and value is corresponded to the selected value");
+        // for dropdown there is a log row and value is corresponded to the selected value
         getLogsAndVerifyActions(DropdownOptionsTexts.getDropdownOptionsTexts(), ElementTypes.DROPDOWN);
     }
 
