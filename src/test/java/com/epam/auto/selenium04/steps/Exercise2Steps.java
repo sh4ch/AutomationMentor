@@ -9,13 +9,11 @@ import com.epam.auto.selenium03.enums.CheckboxesTexts;
 import com.epam.auto.selenium03.enums.DropdownOptionsTexts;
 import com.epam.auto.selenium03.enums.ElementTypes;
 import com.epam.auto.selenium03.enums.RadioButtonsTexts;
-import com.epam.auto.selenium04.tests.WebBaseTests;
 import io.qameta.allure.Step;
 import java.util.List;
 import org.openqa.selenium.WebDriver;
 
 public class Exercise2Steps extends WebBaseSteps {
-    private String expectedDifferentElementsMenuText = "Different elements";
     private HomePage homePage;
     private DifferentElementsPage differentElementsPage;
 
@@ -25,9 +23,9 @@ public class Exercise2Steps extends WebBaseSteps {
     }
 
     @Step("Step 5: Open through the header menu Service -> Different Elements Page")
-    public void openDiffElPageCheckTitle() {
+    public void openDiffElPageCheckTitle(String expectDiffElMenu) {
         homePage.openDifferentElementsPage();
-        assertEquals(differentElementsPage.getTitle().toLowerCase(), expectedDifferentElementsMenuText.toLowerCase());
+        assertEquals(differentElementsPage.getTitle().toLowerCase(), expectDiffElMenu.toLowerCase());
     }
 
     @Step("Step 6: Select checkboxes: Water, Wind")
@@ -42,9 +40,9 @@ public class Exercise2Steps extends WebBaseSteps {
     }
 
     @Step("Step 8: Select in dropdown Yellow")
-    public void selectYellowCheckSelection() {
+    public void selectYellowCheckSelection(String dropdownText) {
         differentElementsPage.selectDropdownOption(DropdownOptionsTexts.YELLOW.getText());
-        assertEquals(differentElementsPage.getSelectedDropdownOptionText(), DropdownOptionsTexts.YELLOW.getText());
+        assertEquals(differentElementsPage.getSelectedDropdownOptionText(), dropdownText);
     }
 
     @Step("Step 9: Assert that")
