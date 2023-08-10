@@ -27,8 +27,8 @@ public abstract class WebBaseTests {
             PropertiesService propertiesService = new PropertiesService();
             Properties properties = propertiesService.getProperties();
             uri = properties.get("uriJDI").toString();
-            username = properties.get("username").toString();
-            userPassword = properties.get("password").toString();
+            username = System.getenv("username");
+            userPassword = System.getenv("userPassword");
 
             webDriver = new ChromeDriver();
             webDriver.manage().window().maximize();
