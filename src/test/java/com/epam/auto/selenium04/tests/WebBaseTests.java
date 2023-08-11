@@ -8,8 +8,9 @@ import java.time.Duration;
 import java.util.Properties;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterSuite;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 
@@ -21,18 +22,26 @@ public abstract class WebBaseTests {
     private String userPassword;
 
     @BeforeClass(description = "Initial setup for environment")
-    public void initialSetup() {
+    public void initialSetup(ITestContext context) {
         if (webDriver == null) {
             WebDriverManager.chromedriver().setup();
             PropertiesService propertiesService = new PropertiesService();
             Properties properties = propertiesService.getProperties();
             uri = properties.get("uriJDI").toString();
-            username = System.getenv("username");
-            userPassword = System.getenv("userPassword");
+            username = properties.get("username").toString();
+            userPassword = properties.get("password").toString();
+
+            if (username.isEmpty() || username.equals("[MASKED]")) {
+                username = System.getenv("username");
+            }
+            if (userPassword.isEmpty() || userPassword.equals("[MASKED]")) {
+                userPassword = System.getenv("userPassword");
+            }
 
             webDriver = new ChromeDriver();
             webDriver.manage().window().maximize();
             webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
+            context.setAttribute("driver", webDriver);
         }
         WebBaseSteps baseSteps = new WebBaseSteps();
         baseSteps.setUp(webDriver);
@@ -48,13 +57,10 @@ public abstract class WebBaseTests {
 
     @AfterClass(description = "Final Step: Close Browser")
     public void classTeardown() {
-        webDriver.close();
-    }
-
-    @AfterSuite
-    public void suitTeardown() {
-        webDriver.quit();
-        webDriver = null;
+        if (webDriver != null) {
+            webDriver.quit();
+            webDriver = null;
+        }
     }
 
     public WebDriver getWebDriver() {

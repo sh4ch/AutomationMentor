@@ -9,12 +9,11 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(AttachmentListener.class)
-
 public class Exercise2Test extends WebBaseTests {
     private String expectedDifferentElementsMenuText = "Different elements";
 
-    @Feature("Homework 4 Allure report and Steps design")
     @Test(testName = "Exercise 2")
+    @Feature("Homework 4 Allure report and Steps design")
     @Story("Different Elements page tests")
     public void exercise2() {
         Exercise2Steps ex2Steps = new Exercise2Steps(webDriver);

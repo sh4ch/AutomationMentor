@@ -11,7 +11,6 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(AttachmentListener.class)
-
 public class Exercise1Test extends WebBaseTests {
     private List<String> expectedIconTexts = Arrays
             .asList("To include good practices\nand ideas from successful\nEPAM project",
@@ -24,8 +23,8 @@ public class Exercise1Test extends WebBaseTests {
     private int expectedTextsNumber = 4;
     private int expectedLeftSectionItems = 5;
 
-    @Feature("Homework 4 Allure report and Steps design")
     @Test(testName = "Exercise 1")
+    @Feature("Homework 4 Allure report and Steps design")
     @Story("Home page tests")
     public void exercise1() {
         Exercise1Steps ex1Steps = new Exercise1Steps(webDriver);
@@ -51,5 +50,7 @@ public class Exercise1Test extends WebBaseTests {
         //Step 11: Assert that there are 5 items in the Left Section are displayed, and they have proper text
         // “Home”, “Contact form”, “Service”, “Metals & Colors”, “Elements packs”
         ex1Steps.checkLeftSectionItems(expectedLeftSectionItems, MenuTexts.getLeftMenuTexts());
+
+        ex1Steps.getSoftAssert().assertAll();
     }
 }

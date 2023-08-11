@@ -17,15 +17,15 @@ public class AttachmentListener implements ITestListener {
         Object testClassInstance = itestresult.getInstance();
         if (testClassInstance instanceof WebBaseTests) {
             WebDriver driver = ((WebBaseTests) testClassInstance).getWebDriver();
-            saveScreenshot(driver);
+            saveScreenshot(driver, itestresult.getName());
         }
     }
 
     @Attachment(type = "image/png", fileExtension = ".png")
-    public byte[] saveScreenshot(WebDriver driver) {
+    public byte[] saveScreenshot(WebDriver driver, String testName) {
         File screenCapture = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         try {
-            FileUtils.copyFile(screenCapture, new File(".//target/screenshots/" + "Screenshot.png"));
+            FileUtils.copyFile(screenCapture, new File(".//target/screenshots/" + testName + "_Screenshot.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
