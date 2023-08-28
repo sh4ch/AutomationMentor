@@ -1,14 +1,11 @@
 package com.epam.auto.selenium04.tests;
 
 import com.epam.auto.selenium03.enums.DropdownOptionsTexts;
-import com.epam.auto.selenium04.AttachmentListener;
 import com.epam.auto.selenium04.steps.Exercise2Steps;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-@Listeners(AttachmentListener.class)
 public class Exercise2Test extends WebBaseTests {
     private String expectedDifferentElementsMenuText = "Different elements";
 

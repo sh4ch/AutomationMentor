@@ -1,16 +1,13 @@
 package com.epam.auto.selenium04.tests;
 
-import com.epam.auto.selenium04.AttachmentListener;
 import com.epam.auto.selenium04.enums.MenuTexts;
 import com.epam.auto.selenium04.steps.Exercise1Steps;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import java.util.Arrays;
 import java.util.List;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-@Listeners(AttachmentListener.class)
 public class Exercise1Test extends WebBaseTests {
     private List<String> expectedIconTexts = Arrays
             .asList("To include good practices\nand ideas from successful\nEPAM project",

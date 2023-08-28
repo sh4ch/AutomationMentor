@@ -10,13 +10,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 
 @Listeners(AttachmentListener.class)
 public abstract class WebBaseTests {
-    protected WebDriver webDriver;
+    protected static WebDriver webDriver;
     private String uri;
     private String username;
     private String userPassword;
@@ -61,9 +60,10 @@ public abstract class WebBaseTests {
             webDriver.quit();
             webDriver = null;
         }
+
     }
 
-    public WebDriver getWebDriver() {
+    public static WebDriver getWebDriver() {
         return webDriver;
     }
 }

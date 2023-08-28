@@ -1,14 +1,10 @@
 package com.epam.auto.selenium04.tests;
 
-import com.epam.auto.selenium04.AttachmentListener;
-import com.epam.auto.selenium04.enums.MenuTexts;
 import com.epam.auto.selenium04.steps.Exercise1Steps;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-@Listeners(AttachmentListener.class)
 public class TestFail extends WebBaseTests {
     private int expectedImagesNumber = 6;
     private String expectedFrameButtonText = "Frame Butter";
@@ -24,5 +20,6 @@ public class TestFail extends WebBaseTests {
         //Step 9: Switch to the iframe and check that there is “Frame Button” in the iframe
         ex1Steps.checkFrameButtonInIFrame(expectedFrameButtonText);
 
+        ex1Steps.getSoftAssert().assertAll();
     }
 }

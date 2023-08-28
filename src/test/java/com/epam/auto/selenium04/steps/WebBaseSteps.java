@@ -2,18 +2,19 @@ package com.epam.auto.selenium04.steps;
 
 import com.epam.auto.selenium03.HomePage;
 import io.qameta.allure.Step;
+import org.assertj.core.api.SoftAssertions;
 import org.openqa.selenium.WebDriver;
-import org.testng.asserts.SoftAssert;
+import org.testng.annotations.AfterClass;
 
 public class WebBaseSteps {
     protected WebDriver webDriver;
-    protected SoftAssert softAssert;
+    protected SoftAssertions softAssert;
     private String expectedHomePageTitle = "Home Page";
     private String expectedUserNameText = "ROMAN IOVLEV";
     private HomePage homePage;
 
     public void setUp(WebDriver driver) {
-        softAssert = new SoftAssert();
+        softAssert = new SoftAssertions();
         homePage = new HomePage(driver);
         webDriver = driver;
     }
@@ -21,12 +22,12 @@ public class WebBaseSteps {
     @Step("Step 1: Open test site by URL")
     public void openSiteCheckUrl(String uri) {
         webDriver.navigate().to(uri);
-        softAssert.assertEquals(webDriver.getCurrentUrl(), uri);
+        softAssert.assertThat(webDriver.getCurrentUrl()).isEqualTo(uri);
     }
 
     @Step("Step 2: Assert Browser title \"Home Page\"")
     public void checkBrowserTitle() {
-        softAssert.assertEquals(homePage.getTitle(), expectedHomePageTitle);
+        softAssert.assertThat(homePage.getTitle()).isEqualTo(expectedHomePageTitle);
     }
 
     @Step("Step 3: Perform login")
@@ -36,6 +37,10 @@ public class WebBaseSteps {
 
     @Step("Step 4: Assert Username is logged in")
     public void checkUsername() {
-        softAssert.assertEquals(homePage.getUserName(), expectedUserNameText);
+        softAssert.assertThat(homePage.getUserName()).isEqualTo(expectedUserNameText);
+    }
+
+    public SoftAssertions getSoftAssert() {
+        return softAssert;
     }
 }
