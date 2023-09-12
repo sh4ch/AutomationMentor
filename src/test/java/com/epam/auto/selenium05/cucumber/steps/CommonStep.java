@@ -13,7 +13,7 @@ public class CommonStep extends AbstractBaseStep {
         homePage.openPage(uri);
     }
 
-    @Given("I login as user \"Roman Iovlev\"")
+    @Given("I login as user Roman Iovlev")
     public void loginHomePage() {
         homePage.login(username, userPassword);
     }

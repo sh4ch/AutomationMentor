@@ -11,17 +11,17 @@ import java.util.List;
 public class UserTableSteps extends AbstractBaseStep {
     public static final String EXPECTED_USER_TABLE_TITLE = "User Table";
 
-    @When("I click on \"Service\" button in Header")
+    @When("I click on Service button in Header")
     public void clickOnServiceButton() {
         homePage.clickOnServiceButton();
     }
 
-    @When("I click on \"User Table\" button in Service dropdown")
+    @When("I click on User Table button in Service dropdown")
     public void clickOnUserTableButton() {
         homePage.clickOnUserTablePage();
     }
 
-    @Then("\"User Table\" page should be opened")
+    @Then("User Table page should be opened")
     public void checkUserTablePageTitle() {
         assertThat(userTablePage.getTitle()).isEqualTo(EXPECTED_USER_TABLE_TITLE);
     }
@@ -62,7 +62,7 @@ public class UserTableSteps extends AbstractBaseStep {
         assertThat(userTablePage.getDropdownValuesForUser(userName)).isEqualTo(tableWithoutHeader);
     }
 
-    @When("I select 'vip' checkbox for {string}")
+    @When("I select vip checkbox for {string}")
     public void selectVipCheckbox(String userName) {
         userTablePage.selectVipCheckboxForUser(userName);
     }
