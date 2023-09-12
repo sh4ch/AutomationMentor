@@ -1,11 +1,20 @@
 package com.epam.auto.selenium03.tests;
 
+import static io.qameta.allure.Allure.step;
+
 import com.epam.auto.selenium03.HomePage;
 import com.epam.auto.selenium03.enums.MenuTexts;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import java.util.Arrays;
 import java.util.List;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
+
+@Epic("Selenium 4 Exercises")
+@Feature("Exercise 1")
 
 public class Exercise1Test extends WebBaseTests {
     private HomePage homePage;
@@ -17,9 +26,11 @@ public class Exercise1Test extends WebBaseTests {
     private String expectedFrameButtonText = "Frame Button";
 
     @Test(testName = "Exercise 1")
+    @Description("Testing of Home Page desc")
+    @Story("Exersice 1 Test")
     public void exercise1() {
-        //Step 5: Assert that there are 4 items on the header section are displayed, and they have proper texts
-        //"HOME", "CONTACT FORM", "SERVICE", "METALS & COLORS"
+        step("Step 5: Assert that there are 4 items on the header section are displayed, "
+                + "and they have proper texts \"HOME\", \"CONTACT FORM\", \"SERVICE\", \"METALS & COLORS\"");
         homePage = new HomePage(webDriver);
         softAssert.assertEquals(homePage.getMenuElements().size(), 4);
 
@@ -28,30 +39,30 @@ public class Exercise1Test extends WebBaseTests {
         }
         softAssert.assertEquals(homePage.getMenuTexts(), MenuTexts.getUpperMenuTexts());
 
-        //Step 6: Assert that there are 4 images on the Index Page, and they are displayed
+        step("Step 6: Assert that there are 4 images on the Index Page, and they are displayed");
         softAssert.assertEquals(homePage.getIndexImages().size(), 4);
 
         for (WebElement indexImage : homePage.getIndexImages()) {
             softAssert.assertTrue(indexImage.isDisplayed());
         }
 
-        //Step 7: Assert that there are 4 texts on the Index Page under icons, and they have proper text
+        step("Step 7: Assert that there are 4 texts on the Index Page under icons, and they have proper text");
         softAssert.assertEquals(homePage.getIndexImagesTextElements().size(), 4);
 
         softAssert.assertEquals(homePage.getIndexImagesTexts(), expectedIconTexts);
 
-        //Step 8: Assert that there is the iframe with “Frame Button” exist
+        step("Step 8: Assert that there is the iframe with “Frame Button” exist");
         softAssert.assertTrue(homePage.getFirstFrame().isDisplayed());
 
-        //Step 9: Switch to the iframe and check that there is “Frame Button” in the iframe
+        step("Step 9: Switch to the iframe and check that there is “Frame Button” in the iframe");
         homePage.switchToFrame();
         softAssert.assertEquals(homePage.getFrameButtonValue(), expectedFrameButtonText);
 
-        //Step 10: Switch to original window back
+        step("Step 10: Switch to original window back");
         homePage.switchToDefault();
 
-        //Step 11: Assert that there are 5 items in the Left Section are displayed, and they have proper text
-        // “Home”, “Contact form”, “Service”, “Metals & Colors”, “Elements packs”
+        step("Step 11: Assert that there are 5 items in the Left Section are displayed, "
+                + "and they have proper text “Home”, “Contact form”, “Service”, “Metals & Colors”, “Elements packs”");
         softAssert.assertEquals(homePage.getLeftMenuElements().size(), 5);
 
         for (WebElement leftMenuItem : homePage.getLeftMenuElements()) {
