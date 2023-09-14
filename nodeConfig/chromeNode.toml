@@ -1,0 +1,14 @@
+# chrome-config.toml
+[server]
+port = 5555
+
+[node]
+session-timeout = "300"
+override-max-sessions = false
+detect-drivers = false
+max-sessions = 5
+
+[[node.driver-configuration]]
+display-name = "Chrome"
+stereotype = '{"browserName": "chrome"}'
+max-sessions = 5
