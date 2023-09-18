@@ -48,6 +48,12 @@ public abstract class WebBaseTests {
         baseSteps.checkUsername();
     }
 
+    @BeforeClass
+    public void addBrowserInfoToTestContext(ITestContext context) {
+        String browserName = System.getProperty("browser.name", "chrome");
+        context.getCurrentXmlTest().addParameter("browserName", browserName);
+    }
+
     @AfterClass(description = "Final Step: Close Browser")
     public void classTeardown() {
         WebDriverProvider.closeDriver();

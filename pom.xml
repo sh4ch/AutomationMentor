@@ -261,7 +261,6 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>${suite.xml.name}</suiteXmlFile>
                     </suiteXmlFiles>
-                    <parallel>none</parallel>               
                 </configuration>
                 <dependencies>
                     <dependency>
