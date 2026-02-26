@@ -92,6 +92,14 @@
                     ${project.basedir}/src/test/resources/com/epam/auto/selenium05/Lesson5CucumberSuit.xml
                 </suite.xml.name>
             </properties>
+        </profile>
+        <profile>
+            <id>all-exercises-hw6</id>
+            <properties>
+                <suite.xml.name>
+                    ${project.basedir}/src/test/resources/com/epam/auto/selenium06/grid.xml
+                </suite.xml.name>
+            </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -167,11 +175,6 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/calculator-1.0.jar</systemPath>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>io.qameta.allure</groupId>-->
-<!--            <artifactId>allure-testng</artifactId>-->
-<!--            <version>${allure.version}</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
@@ -258,7 +261,6 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>${suite.xml.name}</suiteXmlFile>
                     </suiteXmlFiles>
-                    <parallel>none</parallel>               
                 </configuration>
                 <dependencies>
                     <dependency>

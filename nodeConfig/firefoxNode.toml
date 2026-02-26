@@ -1,0 +1,13 @@
+# firefox-config.toml
+[server]
+port = 6666
+
+[node]
+session-timeout = "300"
+detect-drivers = false
+
+
+[[node.driver-configuration]]
+display-name = "Firefox"
+stereotype = '{"browserName": "firefox"}'
+max-sessions = 3
