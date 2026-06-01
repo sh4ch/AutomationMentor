@@ -6,7 +6,7 @@ import java.util.List;
 public enum RadioButtonsTexts {
     GOLD("Gold"),
     SILVER("Silver"),
-    BRONZE("Bronze"),
+    RUBY("Ruby"),
     SELEN("Selen");
 
     private final String text;
